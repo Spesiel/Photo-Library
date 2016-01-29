@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoLibrary", "PhotoLibrary\PhotoLibrary.csproj", "{3B141245-B05A-43C7-ACE7-792CD53B5370}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoLibraryGui", "PhotoLibraryGui\PhotoLibraryGui.csproj", "{B0217004-902B-4A21-AE78-30221809D116}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoLibraryScreens", "PhotoLibraryScreens\PhotoLibraryScreens.csproj", "{225089D4-B692-4B7F-9881-3140DA0DF59C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3FCB8920-4202-4CC0-96BE-EED1FEC1A28E}"
+	ProjectSection(SolutionItems) = preProject
+		Nota.txt = Nota.txt
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3B141245-B05A-43C7-ACE7-792CD53B5370}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B141245-B05A-43C7-ACE7-792CD53B5370}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B141245-B05A-43C7-ACE7-792CD53B5370}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B141245-B05A-43C7-ACE7-792CD53B5370}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0217004-902B-4A21-AE78-30221809D116}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0217004-902B-4A21-AE78-30221809D116}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0217004-902B-4A21-AE78-30221809D116}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0217004-902B-4A21-AE78-30221809D116}.Release|Any CPU.Build.0 = Release|Any CPU
+		{225089D4-B692-4B7F-9881-3140DA0DF59C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{225089D4-B692-4B7F-9881-3140DA0DF59C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{225089D4-B692-4B7F-9881-3140DA0DF59C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{225089D4-B692-4B7F-9881-3140DA0DF59C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://penelopeblossom.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = PhotoLibrary\\PhotoLibrary.csproj
+		SccProjectName1 = PhotoLibrary
+		SccLocalPath1 = PhotoLibrary
+		SccProjectUniqueName2 = PhotoLibraryGui\\PhotoLibraryGui.csproj
+		SccProjectName2 = PhotoLibraryGui
+		SccLocalPath2 = PhotoLibraryGui
+		SccProjectUniqueName3 = PhotoLibraryScreens\\PhotoLibraryScreens.csproj
+		SccProjectName3 = PhotoLibraryScreens
+		SccLocalPath3 = PhotoLibraryScreens
+	EndGlobalSection
+EndGlobal

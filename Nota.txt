@@ -1,0 +1,4 @@
+	ESENT Managed Interface
+http://managedesent.codeplex.com/license
+	Nreco.VideoConverter
+http://www.nrecosite.com/video_converter_net.aspx
