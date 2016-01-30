@@ -1,6 +1,6 @@
 ﻿//TODO CachePeople
 
-namespace PhotoLibrary
+namespace PhotoLibrary.Cache
 {
     /// <summary>
     /// Cache object to manage people

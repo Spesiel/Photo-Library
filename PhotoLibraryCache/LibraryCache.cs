@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PhotoLibrary
+namespace PhotoLibrary.Cache
 {
     public static class LibraryCache
     {

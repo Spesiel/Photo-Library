@@ -3,7 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace PhotoLibrary
+namespace PhotoLibrary.Cache
 {
     [Serializable]
     public struct CacheExif
