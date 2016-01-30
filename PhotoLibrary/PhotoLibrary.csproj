@@ -42,6 +42,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
@@ -49,20 +51,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions.cs" />
     <Compile Include="CLSCompliant.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Navigation.cs" />
     <Compile Include="NerdStats.cs" />
     <Compile Include="PhotoWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PhotoLibraryCache\PhotoLibraryCache.csproj">
       <Project>{d61e0619-80a1-4e22-ae9e-23301d8c8cab}</Project>
       <Name>PhotoLibraryCache</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PhotoLibraryReference\PhotoLibraryReference.csproj">
+      <Project>{a62965e2-de7b-420d-849f-da25cd95277b}</Project>
+      <Name>PhotoLibraryReference</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="CustomDictionary.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,5 +1,6 @@
 ﻿//TODO CacheTimer
 using Microsoft.Isam.Esent.Collections.Generic;
+using PhotoLibrary.Reference;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

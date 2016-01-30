@@ -1,4 +1,5 @@
-﻿using PhotoLibrary.Globalization;
+﻿using PhotoLibrary.Reference;
+using PhotoLibrary.Reference.Globalization;
 using PhotoLibrary.Screens;
 using System;
 using System.ComponentModel;
@@ -93,7 +94,7 @@ namespace PhotoLibrary.Gui
                     bw.ProgressChanged += (s, args) =>
                     {
                         toolStrip_progressBar.Value = args.ProgressPercentage;
-                        toolStrip_progressText.Text = 100 * LibraryCache.CountValues(null) / NerdStats.NumberOfMediasLoaded + Literals.PercentSign;
+                        toolStrip_progressText.Text = 100 * Navigation.CountValues(null) / NerdStats.NumberOfMediasLoaded + Literals.PercentSign;
                     };
 
                     // Runs the worker
@@ -149,7 +150,7 @@ namespace PhotoLibrary.Gui
 
             // Concerning the ListView
             {
-                prime.ListView.VirtualListSize = LibraryCache.CountValues(null);
+                prime.ListView.VirtualListSize = Navigation.CountValues(null);
 
                 // Sets the control
                 prime.ListView.LargeImageList = new ImageList();
@@ -177,14 +178,14 @@ namespace PhotoLibrary.Gui
                 // Events for the background worker
                 bw.DoWork += (s, args) =>
                 {
-                    LibraryCache.BackgroundFetchForThumbnails(bw, prime.ListView.BackColor);
+                    Actions.BackgroundFetchForThumbnails(bw, prime.ListView.BackColor);
                 };
 
                 // Changes to the status bar as it progresses
                 bw.ProgressChanged += (s, args) =>
                 {
-                    int percentage = 100 * (LibraryCache.CountValuesWhere(v => v.Thumbnail != null)) /
-                        LibraryCache.CountValues(null);
+                    int percentage = 100 * (Navigation.CountValuesWhereThumbnailIsAbsent()) /
+                        Navigation.CountValues(null);
                     if (toolStrip_progressBar != null)
                     {
                         toolStrip_progressBar.Value = percentage;
@@ -236,14 +237,14 @@ namespace PhotoLibrary.Gui
                 // Events for the background worker
                 bw.DoWork += (s, args) =>
                 {
-                    LibraryCache.BackgroundFetchForExif(bw);
+                    Actions.BackgroundFetchForExif(bw);
                 };
 
                 // Changes to the status bar as it progresses
                 bw.ProgressChanged += (s, args) =>
                 {
-                    int percentage = 100 * (LibraryCache.CountValuesWhere(v => v.Thumbnail != null)) /
-                        LibraryCache.CountValues(null);
+                    int percentage = 100 * (Navigation.CountValuesWhereThumbnailIsAbsent()) /
+                        Navigation.CountValues(null);
                     if (toolStrip_progressBar != null)
                     {
                         toolStrip_progressBar.Value = percentage;

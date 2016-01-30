@@ -36,8 +36,6 @@
     <CodeAnalysisRuleSet>..\..\Resources\Rulesets\All_NoSpellCheck.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -139,6 +137,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PhotoLibraryReference\PhotoLibraryReference.csproj">
+      <Project>{a62965e2-de7b-420d-849f-da25cd95277b}</Project>
+      <Name>PhotoLibraryReference</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PhotoLibrary\PhotoLibrary.csproj">
       <Project>{3b141245-b05a-43c7-ace7-792cd53b5370}</Project>
       <Name>PhotoLibrary</Name>

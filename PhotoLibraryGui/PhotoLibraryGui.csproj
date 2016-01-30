@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CLSCompliant.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,6 +88,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PhotoLibraryReference\PhotoLibraryReference.csproj">
+      <Project>{a62965e2-de7b-420d-849f-da25cd95277b}</Project>
+      <Name>PhotoLibraryReference</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PhotoLibraryScreens\PhotoLibraryScreens.csproj">
       <Project>{225089d4-b692-4b7f-9881-3140da0df59c}</Project>
       <Name>PhotoLibraryScreens</Name>
@@ -95,6 +100,9 @@
       <Project>{3b141245-b05a-43c7-ace7-792cd53b5370}</Project>
       <Name>PhotoLibrary</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="CustomDictionary.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

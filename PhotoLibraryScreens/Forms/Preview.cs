@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PhotoLibrary.Reference;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -21,15 +22,15 @@ namespace PhotoLibrary.Screens
             InitializeComponent();
 
             label.Text = Text = Key;
-            picture.Load(PhotoWork.Settings.GetFile(Key));
+            picture.Load(AtRuntime.Settings.GetFile(Key));
 
             // Sets the navigation
-            int index = LibraryCache.GetIndex(DirectoryFilter, Key);
+            int index = Navigation.GetIndex(DirectoryFilter, Key);
             if (index == 0)
             {
                 pic_previous.Visible = false;
             }
-            if (index == LibraryCache.CountValues(DirectoryFilter) - 1)
+            if (index == Navigation.CountValues(DirectoryFilter) - 1)
             {
                 pic_next.Visible = false;
             }
@@ -37,10 +38,10 @@ namespace PhotoLibrary.Screens
 
         private void pic_previous_Click(object sender, EventArgs e)
         {
-            KeyValuePair<string, bool> newKey = LibraryCache.GetPreviousCacheEntry(DirectoryFilter, Key);
-            Key = newKey.Key;
+            Tuple<string, bool> newKey = Navigation.GetPreviousCacheEntry(DirectoryFilter, Key);
+            Key = newKey.Item1;
             // We have reached the first pic
-            if (newKey.Value)
+            if (newKey.Item2)
             {
                 pic_previous.Visible = false;
             }
@@ -51,15 +52,15 @@ namespace PhotoLibrary.Screens
             }
 
             label.Text = Text = Key;
-            picture.Load(PhotoWork.Settings.GetFile(Key));
+            picture.Load(AtRuntime.Settings.GetFile(Key));
         }
 
         private void pic_next_Click(object sender, EventArgs e)
         {
-            KeyValuePair<string, bool> newKey = LibraryCache.GetNextCacheEntry(DirectoryFilter, Key);
-            Key = newKey.Key;
+            Tuple<string, bool> newKey = Navigation.GetNextCacheEntry(DirectoryFilter, Key);
+            Key = newKey.Item1;
             // We have reached the last pic
-            if (newKey.Value)
+            if (newKey.Item2)
             {
                 pic_next.Visible = false;
             }
@@ -70,7 +71,7 @@ namespace PhotoLibrary.Screens
             }
 
             label.Text = Text = Key;
-            picture.Load(PhotoWork.Settings.GetFile(Key));
+            picture.Load(AtRuntime.Settings.GetFile(Key));
         }
     }
 }

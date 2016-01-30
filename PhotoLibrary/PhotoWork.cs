@@ -1,11 +1,12 @@
-﻿using NReco.VideoConverter;
-using System;
+﻿using PhotoLibrary.Cache;
+using PhotoLibrary.Reference;
+using PhotoLibrary.Reference.Objects;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -16,8 +17,6 @@ namespace PhotoLibrary
     /// </summary>
     public static class PhotoWork
     {
-        public static Settings Settings { get; set; }
-
         /// <summary>
         /// Loads the pics details into memory
         /// </summary>
@@ -25,11 +24,8 @@ namespace PhotoLibrary
         public static void LoadDirectory(BackgroundWorker worker, string initialDirectory)
         {
             // Initializes the objects used
-            Settings = new Settings(initialDirectory);
-            if (PersistentDictionaryFile.Exists(Constants.CacheFullPath))
-            {
-                PersistentDictionaryFile.DeleteFiles(Constants.CacheFullPath);
-            }
+            AtRuntime.Settings = new Settings(initialDirectory);
+            LibraryCache.Clear();
 
             //
             // Listing the medias
@@ -40,10 +36,10 @@ namespace PhotoLibrary
             AddToLibrary(worker, medias);
 
             // Lists ignored files
-            Settings.Ignored = Directory.EnumerateFiles(Settings.GetDirectory, "*", SearchOption.AllDirectories).
+            AtRuntime.Settings.SetIgnored(Directory.EnumerateFiles(AtRuntime.Settings.GetDirectory, "*", SearchOption.AllDirectories).
                  Where(file => !Constants.AllowedExtensionsImages().Any(file.ToUpperInvariant().EndsWith)).
                  Where(file => !Constants.AllowedExtensionsVideos().Any(file.ToUpperInvariant().EndsWith)).
-                 ToList();
+                 ToList());
         }
 
         /// <summary>
@@ -51,14 +47,14 @@ namespace PhotoLibrary
         /// </summary>
         public static void LoadLibrary()
         {
-            Settings = new Settings(null);
+            AtRuntime.Settings = new Settings(null);
 
             using (FileStream file = File.OpenRead(Constants.BaseFullPath))
             {
                 var deserializer = new DataContractSerializer(typeof(Settings));
                 using (var reader = new XmlTextReader(file))
                 {
-                    Settings = deserializer.ReadObject(reader) as Settings;
+                    AtRuntime.Settings = deserializer.ReadObject(reader) as Settings;
                 }
             }
         }
@@ -68,9 +64,9 @@ namespace PhotoLibrary
             int[] ans = new int[2];
 
             // We got the library loaded, now we should check its integrity
-            List<string> mediasOnDisk = GetListMediasInInitialDirectory().ConvertAll(s => s.Replace(Settings.GetDirectory, ""));
+            List<string> mediasOnDisk = GetListMediasInInitialDirectory().ConvertAll(s => s.Replace(AtRuntime.Settings.GetDirectory, ""));
             //// Lists the medias missing in the library (aka New content)
-            List<string> newContent = mediasOnDisk.Except(LibraryCache.Keys).ToList().ConvertAll(s => s.Insert(0, Settings.GetDirectory));
+            List<string> newContent = mediasOnDisk.Except(LibraryCache.Keys).ToList().ConvertAll(s => s.Insert(0, AtRuntime.Settings.GetDirectory));
             ans[0] = newContent.Count;
             AddToLibrary(null, newContent);
             //// Lists the medias missing in the initial directory (aka Missing content)
@@ -87,7 +83,7 @@ namespace PhotoLibrary
         /// <returns>The list of all medias in the initial directory</returns>
         private static List<string> GetListMediasInInitialDirectory()
         {
-            return Directory.EnumerateFiles(Settings.GetDirectory, "*", SearchOption.AllDirectories).
+            return Directory.EnumerateFiles(AtRuntime.Settings.GetDirectory, "*", SearchOption.AllDirectories).
                 Where(file =>
                 Constants.AllowedExtensionsImages().Any(file.ToUpperInvariant().EndsWith) ||
                 Constants.AllowedExtensionsVideos().Any(file.ToUpperInvariant().EndsWith)).
@@ -105,7 +101,7 @@ namespace PhotoLibrary
                 current =>
                 {
                     // Add it to the library
-                    LibraryCache.Add(current.Replace(Settings.GetDirectory, ""), new CacheObject());
+                    LibraryCache.Add(current.Replace(AtRuntime.Settings.GetDirectory, ""), new CacheObject());
 
                     // Report progress made
                     if (worker != null)
@@ -125,7 +121,7 @@ namespace PhotoLibrary
                 current =>
                 {
                     // Remove it to the library
-                    LibraryCache.Remove(current.Replace(Settings.GetDirectory, ""));
+                    LibraryCache.Remove(current.Replace(AtRuntime.Settings.GetDirectory, ""));
                 });
         }
 
@@ -145,140 +141,13 @@ namespace PhotoLibrary
                 using (var writer = new XmlTextWriter(file, Encoding.UTF8))
                 {
                     writer.Formatting = Formatting.Indented;
-                    serializer.WriteObject(writer, Settings);
+                    serializer.WriteObject(writer, AtRuntime.Settings);
                     writer.Flush();
                 }
             }
 
             // Dispose of the cache
             LibraryCache.Flush();
-        }
-
-        #region Thumbnail generation and Image manipulation
-
-        /// <summary>
-        /// Generate a thumbnail for a specified file
-        /// </summary>
-        /// <param name="background">The background color that item will have</param>
-        /// <param name="pathToFile">The complete path to the file to open</param>
-        /// <returns>The generated thumbnail</returns>
-        public static CacheObject GenerateCacheObject(Color background, String pathToFile)
-        {
-            CacheObject ans = new CacheObject();
-            int targetWidth = 128, targetHeight = 128;
-
-            Image temp = null;
-            /// Generate the thumbnail depending on the type of file
-            if (pathToFile != null)
-            {
-                if (Constants.AllowedExtensionsImages().Any(pathToFile.ToUpperInvariant().EndsWith))
-                {
-                    temp = GenerateThumbnailPhoto(pathToFile);
-                }
-                else
-                {
-                    temp = GenerateThumbnailVideo(pathToFile);
-                }
-            }
-
-            Image target = new Bitmap(1, 1);
-            (target as Bitmap).SetPixel(0, 0, background);
-            target = new Bitmap(target, targetWidth, targetHeight);
-
-            using (Graphics g = Graphics.FromImage(target))
-            {
-                g.Clear(background);
-                int x = (targetWidth - temp.Width) / 2;
-                int y = (targetHeight - temp.Height) / 2;
-                g.DrawImage(temp, x, y);
-            }
-
-            ans.Thumbnail = target;
-
-            return ans;
-        }
-
-        /// <summary>
-        /// Generate a thumbnail for a specified file
-        /// </summary>
-        /// <param name="pathToFile">The complete path to the file to open</param>
-        ///
-        /// <returns>The generated thumbnail</returns>
-        private static Image GenerateThumbnailPhoto(String pathToFile)
-        {
-            using (FileStream fs = new FileStream(pathToFile, FileMode.Open, FileAccess.Read))
-            {
-                using (Image image = Image.FromStream(fs, true, false))
-                {
-                    return ScaleImage(image, 128, 128);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Generate a thumbnail for a specified file
-        /// </summary>
-        /// <param name="pathToFile">The complete path to the file to open</param>
-        ///
-        /// <returns>The generated thumbnail</returns>
-        private static Image GenerateThumbnailVideo(String pathToFile)
-        {
-            using (MemoryStream memStream = new MemoryStream())
-            {
-                FFMpegConverter ffmpeg = new FFMpegConverter();
-                ffmpeg.GetVideoThumbnail(pathToFile, memStream);
-                using (Image image = Image.FromStream(memStream, true, false))
-                {
-                    return ScaleImage(image, 128, 128);
-                }
-            }
-        }
-
-        private static Image ScaleImage(Image image, int maxWidth, int maxHeight)
-        {
-            double ratioX = (double)maxWidth / image.Width;
-            double ratioY = (double)maxHeight / image.Height;
-            double ratio = Math.Min(ratioX, ratioY);
-
-            int newWidth = (int)(image.Width * ratio);
-            int newHeight = (int)(image.Height * ratio);
-
-            Bitmap newImage = new Bitmap(newWidth, newHeight);
-
-            using (Graphics graphics = Graphics.FromImage(newImage))
-            {
-                graphics.DrawImage(image, 0, 0, newWidth, newHeight);
-            }
-
-            return newImage;
-        }
-
-        #endregion Thumbnail generation and Image manipulation
-
-        public static CacheExif GetExifFromImage(string pathToFile)
-        {
-            CacheExif ans = new CacheExif();
-
-            using (FileStream fs = new FileStream(pathToFile, FileMode.Open, FileAccess.Read))
-            {
-                using (Image image = Image.FromStream(fs, false, false))
-                {
-                    Parallel.ForEach(image.PropertyItems, Constants.ParallelOptions,
-                        current =>
-                        {
-                            var previousPriority = Thread.CurrentThread.Priority;
-                            Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-
-                            ans.SetValue(Constants.ExifData[current.Id], current.Value);
-
-                            //Reset previous priority of the TPL Thread
-                            Thread.CurrentThread.Priority = previousPriority;
-                        });
-                }
-            }
-            ans.HasBeenSet = true;
-
-            return ans;
         }
     }
 }

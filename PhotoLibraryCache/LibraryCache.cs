@@ -1,11 +1,9 @@
 ﻿using Microsoft.Isam.Esent.Collections.Generic;
+using PhotoLibrary.Reference;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace PhotoLibrary.Cache
@@ -72,13 +70,13 @@ namespace PhotoLibrary.Cache
                 ans = Keys.ElementAt(index);
             }
             else {
-                ans = Keys.Where(k => k.StartsWith(location)).ElementAt(index);
+                ans = Keys.Where(k => k.StartsWith(location, StringComparison.OrdinalIgnoreCase)).ElementAt(index);
             }
 
             return ans;
         }
 
-        public static KeyValuePair<string, bool> GetPreviousCacheEntry(string location, string key)
+        public static Tuple<string, bool> GetPreviousCacheEntry(string location, string key)
         {
             string ans = string.Empty;
 
@@ -97,10 +95,10 @@ namespace PhotoLibrary.Cache
                 ans = Keys.Where(k => k.StartsWith(location, StringComparison.OrdinalIgnoreCase)).ToList()[getIndex];
             }
 
-            return new KeyValuePair<string, bool>(ans, getIndex == 0);
+            return new Tuple<string, bool>(ans, getIndex == 0);
         }
 
-        public static KeyValuePair<string, bool> GetNextCacheEntry(string path, string imageKey)
+        public static Tuple<string, bool> GetNextCacheEntry(string path, string imageKey)
         {
             string ans = string.Empty;
 
@@ -119,7 +117,7 @@ namespace PhotoLibrary.Cache
                 ans = Keys.Where(k => k.StartsWith(path, StringComparison.OrdinalIgnoreCase)).ToList()[getIndex];
             }
 
-            return new KeyValuePair<string, bool>(ans, getIndex == CountValues(path) - 1);
+            return new Tuple<string, bool>(ans, getIndex == CountValues(path) - 1);
         }
 
         #endregion Get/Set
@@ -204,69 +202,12 @@ namespace PhotoLibrary.Cache
             _LibraryCache.Flush();
         }
 
-        #region Background work
-
-        public static void BackgroundFetchForThumbnails(BackgroundWorker worker, Color background)
+        public static void Clear()
         {
-            // For each media
-            Parallel.ForEach(_LibraryCache.Where(t => t.Value.Thumbnail == null), Constants.ParallelOptions,
-                current =>
-                {
-                    if (current.Value.Thumbnail == null)
-                    {
-                        var previousPriority = Thread.CurrentThread.Priority;
-                        Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
-
-                        string currentFile = PhotoWork.Settings.GetFile(current.Key);
-
-                        // Add it to the library
-                        Set(current.Key, PhotoWork.GenerateCacheObject(background, currentFile));
-
-                        // Report progress made
-                        lock (new object())
-                        {
-                            worker.ReportProgress(100 * (CountValuesWhere(v => v.Thumbnail == null)) /
-                                Count);
-                        };
-
-                        //Reset previous priority of the TPL Thread
-                        Thread.CurrentThread.Priority = previousPriority;
-                    }
-                });
+            if (PersistentDictionaryFile.Exists(Constants.CacheFullPath))
+            {
+                PersistentDictionaryFile.DeleteFiles(Constants.CacheFullPath);
+            }
         }
-
-        public static void BackgroundFetchForExif(BackgroundWorker worker)
-        {
-            // For each media
-            Parallel.ForEach(_LibraryCache.Where(t => false.Equals(t.Value.Exif.HasBeenSet)), Constants.ParallelOptions,
-                current =>
-                {
-                    if (current.Value.Thumbnail == null)
-                    {
-                        var previousPriority = Thread.CurrentThread.Priority;
-                        Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-
-                        string currentFile = PhotoWork.Settings.GetFile(current.Key);
-
-                        // Add it to the library
-                        CacheObject co = LibraryCache.Get(current.Key);
-                        //FIXME Do this elsewhere
-                        co.Exif = PhotoWork.GetExifFromImage(currentFile);
-                        Set(current.Key, co);
-
-                        // Report progress made
-                        lock (new object())
-                        {
-                            worker.ReportProgress(100 * (CountValuesWhere(v => false.Equals(v.Exif.HasBeenSet))) /
-                                Count);
-                        };
-
-                        //Reset previous priority of the TPL Thread
-                        Thread.CurrentThread.Priority = previousPriority;
-                    }
-                });
-        }
-
-        #endregion Background work
     }
 }
