@@ -8,6 +8,6 @@ The point is not to replace photoshop or something but to allow small or time-co
 Of course, the ability to rotate pics is available, as does deletion, markup, etc.
 
 ### This application makes use of
-[Managed Esent](http://managedesent.codeplex.com/) (Published under a [http://managedesent.codeplex.com/license](http://managedesent.codeplex.com/license))
+[Managed Esent](http://managedesent.codeplex.com/) (Published under a [Microsoft Public License (Ms-PL)](http://managedesent.codeplex.com/license))
 
 [NReco.VideoConverter](http://www.nrecosite.com/video_converter_net.aspx) (Published as "a FREE component and [developper] can use its binary DLL in commercial projects without any limitations.")
