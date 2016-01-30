@@ -69,8 +69,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheExif.cs" />
-    <Compile Include="CachePeople.cs" />
-    <Compile Include="CacheTimer.cs" />
     <Compile Include="LibraryCache.cs" />
     <Compile Include="CacheObject.cs" />
     <Compile Include="Globalization\Literals.Designer.cs">
