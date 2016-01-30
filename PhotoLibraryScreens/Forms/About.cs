@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PhotoLibrary.Reference.Globalization;
+using System;
 using System.Globalization;
 using System.Reflection;
 using System.Windows.Forms;
@@ -10,9 +11,9 @@ namespace PhotoLibrary.Screens
         public About()
         {
             InitializeComponent();
-            this.Text = String.Format(CultureInfo.InvariantCulture, Globalization.Literals.About, AssemblyTitle);
+            this.Text = String.Format(CultureInfo.InvariantCulture, Literals.About, AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
-            this.labelVersion.Text = String.Format(CultureInfo.InvariantCulture, Globalization.Literals.Version, AssemblyVersion);
+            this.labelVersion.Text = String.Format(CultureInfo.InvariantCulture, Literals.Version, AssemblyVersion);
             this.labelCopyright.Text = AssemblyCopyright;
             this.textBoxDescription.Text = AssemblyDescription;
         }

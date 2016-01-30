@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace PhotoLibrary
+namespace PhotoLibrary.Cache
 {
     [Serializable]
     public struct CacheObject

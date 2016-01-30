@@ -3,20 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace PhotoLibrary
+namespace PhotoLibrary.Reference
 {
     public static class Constants
     {
         //FIXME Change the directory
         public static string BasePath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + Path.DirectorySeparatorChar; } }
 
-        public static string BaseFile { get { return @"PhotoLibrary.xml"; } }
+        public static string BaseFullPath { get { return BasePath + @"PhotoLibrary.xml"; } }
 
-        public static string BaseFullPath { get { return BasePath + BaseFile; } }
-
-        public static string CachePath { get { return @"PhotoLibraryCache"; } }
-
-        public static string CacheFullPath { get { return BasePath + CachePath; } }
+        public static string CacheFullPath { get { return BasePath + @"PhotoLibraryCache"; } }
 
         public static string[] AllowedExtensionsImages()
         {

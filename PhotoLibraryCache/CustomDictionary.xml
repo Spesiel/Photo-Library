@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Dictionary>
+  <Words>
+    <Unrecognized>
+      <!--Word></Word-->
+    </Unrecognized>
+    <Recognized>
+      <Word>Exif</Word>
+      <Word>Gps</Word>
+      <Word>Cb</Word>
+      <Word>Cr</Word>
+      <Word>Cfa</Word>
+      <Word>Chromaticities</Word>
+      <Word>Dest</Word>
+      <Word>Dir</Word>
+      <Word>Dist</Word>
+      <Word>Img</Word>
+      <Word>Interp</Word>
+      <Word>Lat</Word>
+      <Word>Loc</Word>
+      <Word>Orig</Word>
+      <Word>Proc</Word>
+      <Word>Subfile</Word>
+      <Word>Subsec</Word>
+      <Word>Ver</Word>
+      <Word>Dop</Word>
+    </Recognized>
+    <Deprecated>
+      <!--Term PreferredAlternate=""></Term-->
+    </Deprecated>
+    <Compound>
+      <!--Term CompoundAlternate=""></Term-->
+    </Compound>
+    <DiscreteExceptions>
+      <Term>Copyright</Term>
+    </DiscreteExceptions>
+  </Words>
+  <Acronyms>
+    <CasingExceptions>
+      <Acronym>JPEG</Acronym>
+      <Acronym>JPEGQ</Acronym>
+      <Acronym>JPEGAC</Acronym>
+      <Acronym>JPEGDC</Acronym>
+      <Acronym>BPP</Acronym>
+      <Acronym>FPX</Acronym>
+      <Acronym>ICC</Acronym>
+      <Acronym>IFD</Acronym>
+      <Acronym>ISO</Acronym>
+      <Acronym>LPI</Acronym>
+      <Acronym>OECF</Acronym>
+      <Acronym>REF</Acronym>
+      <Acronym>SRGB</Acronym>
+      <Acronym>Cb</Acronym>
+    </CasingExceptions>
+  </Acronyms>
+</Dictionary>

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using PhotoLibrary.Reference;
 using System.IO;
 using System.Windows.Forms;
 
@@ -30,7 +29,7 @@ namespace PhotoLibrary.Screens
                     ListViewFilter = null;
                 }
                 ListView.Clear();
-                ListView.VirtualListSize = LibraryCache.CountValues(ListViewFilter);
+                ListView.VirtualListSize = Navigation.CountValues(ListViewFilter);
             };
         }
 
@@ -57,18 +56,13 @@ namespace PhotoLibrary.Screens
         private void listview_onRetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
             //A cache hit, so get the ListViewItem from the cache instead of making a new one.
-            e.Item = new ListViewItem(LibraryCache.GetKey(ListViewFilter, e.ItemIndex));
+            e.Item = new ListViewItem(Navigation.GetKey(ListViewFilter, e.ItemIndex));
         }
 
         private void listview_onDrawItem(object sender, DrawListViewItemEventArgs e)
         {
-            if (LibraryCache.Get(e.Item.Text).Thumbnail == null)
-            {
-                // Set the value in the cache
-                LibraryCache.Set(e.Item.Text,
-                    PhotoWork.GenerateCacheObject(listView.BackColor, PhotoWork.Settings.GetFile(e.Item.Text)));
-            }
-            e.Graphics.DrawImage(LibraryCache.Get(e.Item.Text).Thumbnail, e.Bounds);
+            Actions.GenerateThumbnail(listView.BackColor, e.Item.Text);
+            e.Graphics.DrawImage(Navigation.GetThumbnail(e.Item.Text), e.Bounds);
         }
 
         private void listview_onSearchForVirtualItem(object sender, SearchForVirtualItemEventArgs e)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PhotoLibrary.Reference;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -20,7 +21,7 @@ namespace PhotoLibrary.Screens
         public void LoadTree()
         {
             tree.Nodes.Clear();
-            var rootDirectoryInfo = new DirectoryInfo(PhotoWork.Settings.GetDirectory);
+            var rootDirectoryInfo = new DirectoryInfo(AtRuntime.Settings.GetDirectory);
             tree.Nodes.Add(CreateDirectoryNode(rootDirectoryInfo));
 
             tree.ExpandAll();

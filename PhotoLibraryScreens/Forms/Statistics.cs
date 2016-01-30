@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PhotoLibrary.Reference;
+using System;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -23,7 +24,7 @@ namespace PhotoLibrary.Screens
                 Math.Round((NerdStats.LoadingTimeInMilliseconds.TotalMilliseconds / NerdStats.NumberOfMediasLoaded)
                 , 2, MidpointRounding.AwayFromZero) +
                 " ms/picture"));
-            listStats.Items.Add(NewRow("Items ignored", PhotoWork.Settings.Ignored.Count.ToString(CultureInfo.CurrentCulture)));
+            listStats.Items.Add(NewRow("Items ignored", AtRuntime.Settings.Ignored.Count.ToString(CultureInfo.CurrentCulture)));
         }
 
         private static ListViewItem NewRow(string col1, string col2)
