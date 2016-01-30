@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization;
 
-namespace PhotoLibrary
+namespace PhotoLibrary.Reference
 {
     [DataContract]
     public class Settings

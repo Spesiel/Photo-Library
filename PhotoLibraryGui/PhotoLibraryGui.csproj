@@ -52,7 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CLSCompliant.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>

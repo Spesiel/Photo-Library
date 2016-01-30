@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PhotoLibrary.Globalization {
+namespace PhotoLibrary.Reference.Globalization {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace PhotoLibrary.Globalization {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PhotoLibrary.Globalization.Literals", typeof(Literals).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PhotoLibrary.Reference.Globalization.Literals", typeof(Literals).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

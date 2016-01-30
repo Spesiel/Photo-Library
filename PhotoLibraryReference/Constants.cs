@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace PhotoLibrary.Cache
+namespace PhotoLibrary.Reference
 {
     public static class Constants
     {
