@@ -1,4 +1,4 @@
-﻿using Microsoft.Isam.Esent.Collections.Generic;
+﻿using PhotoLibrary.Cache.Objects;
 using PhotoLibrary.Reference;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace PhotoLibrary.Cache
 {
-    public class LibraryObjects : Cache<CacheObject>
+    public class Items : CacheSingleton<Item>
     {
-        public LibraryObjects() : base(Constants.CacheFullPath)
+        //FIXME Change the path
+        public Items() : base(Constants.CacheFullPath)
         {
         }
 
@@ -29,12 +30,12 @@ namespace PhotoLibrary.Cache
             }
         }
 
-        public IEnumerable<CacheObject> FindByTag(string tag)
+        public IEnumerable<Item> FindByTag(string tag)
         {
             return _Library.Values.Where(v => v.Properties.Tags.Contains(tag));
         }
 
-        public IEnumerable<CacheObject> FindByTags(IList<string> tags)
+        public IEnumerable<Item> FindByTags(IList<string> tags)
         {
             return _Library.Values.Where(v => v.Properties.Tags.Any(t => tags.Contains(t)));
         }

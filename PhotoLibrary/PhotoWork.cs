@@ -1,4 +1,5 @@
 ﻿using PhotoLibrary.Cache;
+using PhotoLibrary.Cache.Objects;
 using PhotoLibrary.Reference;
 using PhotoLibrary.Reference.Objects;
 using System.Collections.Generic;
@@ -66,11 +67,11 @@ namespace PhotoLibrary
             // We got the library loaded, now we should check its integrity
             List<string> mediasOnDisk = GetListMediasInInitialDirectory().ConvertAll(s => s.Replace(AtRuntime.Settings.GetDirectory, ""));
             //// Lists the medias missing in the library (aka New content)
-            List<string> newContent = mediasOnDisk.Except(Libraries.LibraryObjects.Keys).ToList().ConvertAll(s => s.Insert(0, AtRuntime.Settings.GetDirectory));
+            List<string> newContent = mediasOnDisk.Except(Libraries.Items.Keys).ToList().ConvertAll(s => s.Insert(0, AtRuntime.Settings.GetDirectory));
             ans[0] = newContent.Count;
             AddToLibrary(null, newContent);
             //// Lists the medias missing in the initial directory (aka Missing content)
-            List<string> missingContent = mediasOnDisk.Except(Libraries.LibraryObjects.Keys).ToList();
+            List<string> missingContent = mediasOnDisk.Except(Libraries.Items.Keys).ToList();
             ans[1] = missingContent.Count;
             RemoveFromLibrary(missingContent);
 
@@ -101,12 +102,12 @@ namespace PhotoLibrary
                 current =>
                 {
                     // Add it to the library
-                    Libraries.LibraryObjects.Add(current.Replace(AtRuntime.Settings.GetDirectory, ""), new CacheObject());
+                    Libraries.Items.Add(current.Replace(AtRuntime.Settings.GetDirectory, ""), new Item());
 
                     // Report progress made
                     if (worker != null)
                     {
-                        lock (new object()) { worker.ReportProgress(100 * Libraries.LibraryObjects.CountValues(null) / NerdStats.NumberOfMediasLoaded); };
+                        lock (new object()) { worker.ReportProgress(100 * Libraries.Items.CountValues(null) / NerdStats.NumberOfMediasLoaded); };
                     }
                 });
         }

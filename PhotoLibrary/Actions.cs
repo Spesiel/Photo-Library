@@ -1,5 +1,6 @@
 ﻿using NReco.VideoConverter;
 using PhotoLibrary.Cache;
+using PhotoLibrary.Cache.Objects;
 using PhotoLibrary.Reference;
 using System;
 using System.ComponentModel;
@@ -15,10 +16,10 @@ namespace PhotoLibrary
     {
         public static void GenerateThumbnail(Color background, string file)
         {
-            if (Libraries.LibraryObjects.Get(file).Properties.Thumbnail == null)
+            if (Libraries.Items.Get(file).Properties.Thumbnail == null)
             {
                 // Add it to the library
-                Libraries.LibraryObjects.Set(file,
+                Libraries.Items.Set(file,
                     GenerateCacheObjectThumbnail(background, AtRuntime.Settings.GetFile(file)));
             }
         }
@@ -28,7 +29,7 @@ namespace PhotoLibrary
         public static void BackgroundFetchForThumbnails(BackgroundWorker worker, Color background)
         {
             // For each media
-            Parallel.ForEach(Libraries.LibraryObjects.Keys.Where(t => Libraries.LibraryObjects.Get(t).Properties.Thumbnail == null), Constants.ParallelOptions,
+            Parallel.ForEach(Libraries.Items.Keys.Where(t => Libraries.Items.Get(t).Properties.Thumbnail == null), Constants.ParallelOptions,
                 current =>
                 {
                     // Set TPL Thread priority, saving the old one
@@ -52,21 +53,21 @@ namespace PhotoLibrary
         public static void BackgroundFetchForExif(BackgroundWorker worker)
         {
             // For each media
-            Parallel.ForEach(Libraries.LibraryObjects.Keys.Where(t => false.Equals(Libraries.LibraryObjects.Get(t).Exif.HasBeenSet)), Constants.ParallelOptions,
+            Parallel.ForEach(Libraries.Items.Keys.Where(t => false.Equals(Libraries.Items.Get(t).Exif.HasBeenSet)), Constants.ParallelOptions,
                 current =>
                 {
                     // Set TPL Thread priority, saving the old one
                     var previousPriority = Thread.CurrentThread.Priority;
                     Thread.CurrentThread.Priority = ThreadPriority.Lowest;
 
-                    if (!Libraries.LibraryObjects.Get(current).Exif.HasBeenSet)
+                    if (!Libraries.Items.Get(current).Exif.HasBeenSet)
                     {
                         string currentFile = AtRuntime.Settings.GetFile(current);
 
                         // Add it to the library
-                        CacheObject co = Libraries.LibraryObjects.Get(current);
+                        Item co = Libraries.Items.Get(current);
                         co.Exif = GetExifFromImage(currentFile);
-                        Libraries.LibraryObjects.Set(current, co);
+                        Libraries.Items.Set(current, co);
                     }
 
                     //Reset previous priority of the TPL Thread
@@ -91,9 +92,9 @@ namespace PhotoLibrary
         /// <param name="background">The background color that item will have</param>
         /// <param name="pathToFile">The complete path to the file to open</param>
         /// <returns>The generated thumbnail</returns>
-        public static CacheObject GenerateCacheObjectThumbnail(Color background, String pathToFile)
+        public static Item GenerateCacheObjectThumbnail(Color background, String pathToFile)
         {
-            CacheObject ans = new CacheObject();
+            Item ans = new Item();
             int targetWidth = 128, targetHeight = 128;
 
             Image temp = null;

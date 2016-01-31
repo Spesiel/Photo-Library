@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
-namespace PhotoLibrary.Cache
+namespace PhotoLibrary.Cache.Objects
 {
     [Serializable]
-    public struct CacheObject
+    public struct Item
     {
         public Properties Properties { get; set; }
 

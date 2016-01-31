@@ -1,17 +1,20 @@
 ﻿using Microsoft.Isam.Esent.Collections.Generic;
+using PhotoLibrary.Reference;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PhotoLibrary.Cache
 {
-    public abstract class Cache<T>
+    public abstract class CacheSingleton<T>
     {
         internal PersistentDictionary<string, T> _Library;
 
-        public ReadOnlyCollection<string> Keys { get { return new ReadOnlyCollection<string>(_Library.Keys.ToList()); } }
+        public virtual ReadOnlyCollection<string> Keys { get { return new ReadOnlyCollection<string>(_Library.Keys.ToList()); } }
 
-        public Cache(string pathToCache)
+        public CacheSingleton(string pathToCache)
         {
             _Library = new PersistentDictionary<string, T>(pathToCache);
         }
@@ -21,6 +24,11 @@ namespace PhotoLibrary.Cache
         public T Get(string key)
         {
             return _Library[key];
+        }
+
+        public IEnumerable<T> GetAll(string key)
+        {
+            return _Library.Where(lib => lib.Key.StartsWith(key)).Select(lib => lib.Value);
         }
 
         public T Get(string location, int index)
@@ -126,7 +134,7 @@ namespace PhotoLibrary.Cache
 
         #region Add/Remove
 
-        public void Add(string key, T value)
+        public virtual void Add(string key, T value)
         {
             if (_Library.ContainsKey(key))
             {
@@ -138,9 +146,18 @@ namespace PhotoLibrary.Cache
             }
         }
 
-        internal bool Remove(string key)
+        internal virtual bool Remove(string key)
         {
             return _Library.Remove(key);
+        }
+
+        public void RemoveAll(string key)
+        {
+            Parallel.ForEach(_Library.Where(lib => lib.Key.StartsWith(key)), Constants.ParallelOptions,
+                current =>
+                {
+                    _Library.Remove(current);
+                });
         }
 
         #endregion Add/Remove

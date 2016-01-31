@@ -10,44 +10,44 @@ namespace PhotoLibrary
 
         public static string GetKey(string location, int index)
         {
-            return Libraries.LibraryObjects.GetKey(location, index);
+            return Libraries.Items.GetKey(location, index);
         }
 
         public static int GetIndex(string location, string key)
         {
-            return Libraries.LibraryObjects.GetIndex(location, key);
+            return Libraries.Items.GetIndex(location, key);
         }
 
         public static Image GetThumbnail(string key)
         {
-            return Libraries.LibraryObjects.Get(key).Properties.Thumbnail;
+            return Libraries.Items.Get(key).Properties.Thumbnail;
         }
 
         #endregion Straightforward Getters
 
         public static Tuple<string, bool> GetPreviousCacheEntry(string location, string key)
         {
-            return Libraries.LibraryObjects.GetPreviousCacheEntry(location, key);
+            return Libraries.Items.GetPreviousCacheEntry(location, key);
         }
 
         public static Tuple<string, bool> GetNextCacheEntry(string location, string key)
         {
-            return Libraries.LibraryObjects.GetNextCacheEntry(location, key);
+            return Libraries.Items.GetNextCacheEntry(location, key);
         }
 
         public static int CountValues(string location)
         {
-            return Libraries.LibraryObjects.CountValues(location);
+            return Libraries.Items.CountValues(location);
         }
 
         public static int CountValuesWhereThumbnailIsPresent()
         {
-            return Libraries.LibraryObjects.CountValuesWhere(v => v.Properties.Thumbnail != null);
+            return Libraries.Items.CountValuesWhere(v => v.Properties.Thumbnail != null);
         }
 
         public static int CountValuesWhereExifIsPresent()
         {
-            return Libraries.LibraryObjects.CountValuesWhere(v => v.Exif.HasBeenSet);
+            return Libraries.Items.CountValuesWhere(v => v.Exif.HasBeenSet);
         }
     }
 }

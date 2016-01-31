@@ -1,5 +1,4 @@
-﻿using PhotoLibrary.Reference;
-using System.IO;
+﻿using System.IO;
 using System.Windows.Forms;
 
 namespace PhotoLibrary.Screens

@@ -1,26 +1,34 @@
-﻿using PhotoLibrary.Reference;
-
-namespace PhotoLibrary.Cache
+﻿namespace PhotoLibrary.Cache
 {
     public static class Libraries
     {
-        private static LibraryObjects _LibraryObjects = new LibraryObjects();
+        private static Items _Items = new Items();
+        private static Timers _Timers = new Timers();
+        private static Persons _Persons = new Persons();
 
-        public static LibraryObjects LibraryObjects { get { return _LibraryObjects; } }
+        public static Items Items { get { return _Items; } }
+        public static Timers Timers { get { return _Timers; } }
+        public static Persons Persons { get { return _Persons; } }
 
         public static void Remove(string key)
         {
-            LibraryObjects.Remove(key);
+            Items.Remove(key);
+            Timers.RemoveAll(key);
+            Persons.RemoveAll(key);
         }
 
         public static void Flush()
         {
-            LibraryObjects.Flush();
+            Items.Flush();
+            Timers.Flush();
+            Persons.Flush();
         }
 
         public static void Clear()
         {
-            LibraryObjects.Clear();
+            Items.Clear();
+            Timers.Clear();
+            Persons.Clear();
         }
     }
 }

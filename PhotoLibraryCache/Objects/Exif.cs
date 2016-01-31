@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Globalization;
-using System.IO;
-using System.Xml.Serialization;
 
-namespace PhotoLibrary.Cache
+namespace PhotoLibrary.Cache.Objects
 {
     [Serializable]
     public struct Exif
