@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace PhotoLibrary.Cache
 {
     [Serializable]
-    public struct CacheExif
+    public struct Exif
     {
         public bool HasBeenSet { get; set; }
 
@@ -245,7 +245,7 @@ namespace PhotoLibrary.Cache
 
             using (StringWriter writer = new StringWriter(CultureInfo.InvariantCulture))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(CacheExif));
+                XmlSerializer serializer = new XmlSerializer(typeof(Exif));
                 serializer.Serialize(writer, this);
                 ans = writer.ToString();
             }
@@ -253,13 +253,13 @@ namespace PhotoLibrary.Cache
             return ans;
         }
 
-        public static string ToXml(CacheExif cacheExif)
+        public static string ToXml(Exif cacheExif)
         {
             string ans = string.Empty;
 
             using (StringWriter writer = new StringWriter(CultureInfo.InvariantCulture))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(CacheExif));
+                XmlSerializer serializer = new XmlSerializer(typeof(Exif));
                 serializer.Serialize(writer, cacheExif);
                 ans = writer.ToString();
             }
@@ -267,14 +267,14 @@ namespace PhotoLibrary.Cache
             return ans;
         }
 
-        public static CacheExif FromXml(string xml)
+        public static Exif FromXml(string xml)
         {
-            CacheExif ans = new CacheExif();
+            Exif ans = new Exif();
 
             using (StringReader reader = new StringReader(xml))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(CacheExif));
-                ans = (CacheExif)serializer.Deserialize(reader);
+                XmlSerializer serializer = new XmlSerializer(typeof(Exif));
+                ans = (Exif)serializer.Deserialize(reader);
             }
 
             return ans;

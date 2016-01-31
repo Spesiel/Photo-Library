@@ -20,7 +20,7 @@ namespace PhotoLibrary
 
         public static Image GetThumbnail(string key)
         {
-            return Libraries.LibraryObjects.Get(key).Thumbnail;
+            return Libraries.LibraryObjects.Get(key).Properties.Thumbnail;
         }
 
         #endregion Straightforward Getters
@@ -42,7 +42,7 @@ namespace PhotoLibrary
 
         public static int CountValuesWhereThumbnailIsPresent()
         {
-            return Libraries.LibraryObjects.CountValuesWhere(v => v.Thumbnail != null);
+            return Libraries.LibraryObjects.CountValuesWhere(v => v.Properties.Thumbnail != null);
         }
 
         public static int CountValuesWhereExifIsPresent()

@@ -56,7 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CacheExif.cs" />
+    <Compile Include="Exif.cs" />
     <Compile Include="CacheObject.cs" />
     <Compile Include="CachePeople.cs" />
     <Compile Include="CacheTimer.cs" />
@@ -65,6 +65,7 @@
     <Compile Include="Cache.cs" />
     <Compile Include="Libraries.cs" />
     <Compile Include="LibraryObjects.cs" />
+    <Compile Include="Properties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

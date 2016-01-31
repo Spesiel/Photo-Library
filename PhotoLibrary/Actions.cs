@@ -15,7 +15,7 @@ namespace PhotoLibrary
     {
         public static void GenerateThumbnail(Color background, string file)
         {
-            if (Libraries.LibraryObjects.Get(file).Thumbnail == null)
+            if (Libraries.LibraryObjects.Get(file).Properties.Thumbnail == null)
             {
                 // Add it to the library
                 Libraries.LibraryObjects.Set(file,
@@ -28,7 +28,7 @@ namespace PhotoLibrary
         public static void BackgroundFetchForThumbnails(BackgroundWorker worker, Color background)
         {
             // For each media
-            Parallel.ForEach(Libraries.LibraryObjects.Keys.Where(t => Libraries.LibraryObjects.Get(t).Thumbnail == null), Constants.ParallelOptions,
+            Parallel.ForEach(Libraries.LibraryObjects.Keys.Where(t => Libraries.LibraryObjects.Get(t).Properties.Thumbnail == null), Constants.ParallelOptions,
                 current =>
                 {
                     // Set TPL Thread priority, saving the old one
@@ -122,7 +122,9 @@ namespace PhotoLibrary
                 g.DrawImage(temp, x, y);
             }
 
-            ans.Thumbnail = target;
+            Properties prop = new Properties();
+            prop.Thumbnail = target;
+            ans.Properties = prop;
 
             return ans;
         }
@@ -184,9 +186,9 @@ namespace PhotoLibrary
 
         #endregion Thumbnail generation and Image manipulation
 
-        public static CacheExif GetExifFromImage(string pathToFile)
+        public static Exif GetExifFromImage(string pathToFile)
         {
-            CacheExif ans = new CacheExif();
+            Exif ans = new Exif();
 
             using (FileStream fs = new FileStream(pathToFile, FileMode.Open, FileAccess.Read))
             {

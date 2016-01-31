@@ -22,7 +22,7 @@ namespace PhotoLibrary.Cache
                 Parallel.ForEach(_Library.Values.ToList(), Constants.ParallelOptions,
                     current =>
                     {
-                        ans.AddRange(current.Tags);
+                        ans.AddRange(current.Properties.Tags);
                     });
 
                 return ans.Distinct();
@@ -31,12 +31,12 @@ namespace PhotoLibrary.Cache
 
         public IEnumerable<CacheObject> FindByTag(string tag)
         {
-            return _Library.Values.Where(v => v.Tags.Contains(tag));
+            return _Library.Values.Where(v => v.Properties.Tags.Contains(tag));
         }
 
         public IEnumerable<CacheObject> FindByTags(IList<string> tags)
         {
-            return _Library.Values.Where(v => v.Tags.Any(t => tags.Contains(t)));
+            return _Library.Values.Where(v => v.Properties.Tags.Any(t => tags.Contains(t)));
         }
 
         #endregion Tags: GetAll/FindBy
