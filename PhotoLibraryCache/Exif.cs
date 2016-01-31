@@ -236,50 +236,5 @@ namespace PhotoLibrary.Cache
         {
             GetType().GetProperty(property).SetValue(this, Convert.ToBase64String(value));
         }
-
-        #region Translation to/from xml
-
-        public string ToXml()
-        {
-            string ans = string.Empty;
-
-            using (StringWriter writer = new StringWriter(CultureInfo.InvariantCulture))
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(Exif));
-                serializer.Serialize(writer, this);
-                ans = writer.ToString();
-            }
-
-            return ans;
-        }
-
-        public static string ToXml(Exif cacheExif)
-        {
-            string ans = string.Empty;
-
-            using (StringWriter writer = new StringWriter(CultureInfo.InvariantCulture))
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(Exif));
-                serializer.Serialize(writer, cacheExif);
-                ans = writer.ToString();
-            }
-
-            return ans;
-        }
-
-        public static Exif FromXml(string xml)
-        {
-            Exif ans = new Exif();
-
-            using (StringReader reader = new StringReader(xml))
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(Exif));
-                ans = (Exif)serializer.Deserialize(reader);
-            }
-
-            return ans;
-        }
-
-        #endregion Translation to/from xml
     }
 }
