@@ -25,7 +25,7 @@ namespace PhotoLibrary
         {
             // Initializes the objects used
             AtRuntime.Settings = new Settings(initialDirectory);
-            LibraryCache.Clear();
+            Libraries.Clear();
 
             //
             // Listing the medias
@@ -66,11 +66,11 @@ namespace PhotoLibrary
             // We got the library loaded, now we should check its integrity
             List<string> mediasOnDisk = GetListMediasInInitialDirectory().ConvertAll(s => s.Replace(AtRuntime.Settings.GetDirectory, ""));
             //// Lists the medias missing in the library (aka New content)
-            List<string> newContent = mediasOnDisk.Except(LibraryCache.Keys).ToList().ConvertAll(s => s.Insert(0, AtRuntime.Settings.GetDirectory));
+            List<string> newContent = mediasOnDisk.Except(Libraries.LibraryObjects.Keys).ToList().ConvertAll(s => s.Insert(0, AtRuntime.Settings.GetDirectory));
             ans[0] = newContent.Count;
             AddToLibrary(null, newContent);
             //// Lists the medias missing in the initial directory (aka Missing content)
-            List<string> missingContent = mediasOnDisk.Except(LibraryCache.Keys).ToList();
+            List<string> missingContent = mediasOnDisk.Except(Libraries.LibraryObjects.Keys).ToList();
             ans[1] = missingContent.Count;
             RemoveFromLibrary(missingContent);
 
@@ -101,12 +101,12 @@ namespace PhotoLibrary
                 current =>
                 {
                     // Add it to the library
-                    LibraryCache.Add(current.Replace(AtRuntime.Settings.GetDirectory, ""), new CacheObject());
+                    Libraries.LibraryObjects.Add(current.Replace(AtRuntime.Settings.GetDirectory, ""), new CacheObject());
 
                     // Report progress made
                     if (worker != null)
                     {
-                        lock (new object()) { worker.ReportProgress(100 * LibraryCache.CountValues(null) / NerdStats.NumberOfMediasLoaded); };
+                        lock (new object()) { worker.ReportProgress(100 * Libraries.LibraryObjects.CountValues(null) / NerdStats.NumberOfMediasLoaded); };
                     }
                 });
         }
@@ -121,7 +121,7 @@ namespace PhotoLibrary
                 current =>
                 {
                     // Remove it to the library
-                    LibraryCache.Remove(current.Replace(AtRuntime.Settings.GetDirectory, ""));
+                    Libraries.Remove(current.Replace(AtRuntime.Settings.GetDirectory, ""));
                 });
         }
 
@@ -147,7 +147,7 @@ namespace PhotoLibrary
             }
 
             // Dispose of the cache
-            LibraryCache.Flush();
+            Libraries.Flush();
         }
     }
 }

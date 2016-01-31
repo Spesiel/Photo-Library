@@ -63,7 +63,8 @@
     <Compile Include="CLSCompliant.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Cache.cs" />
-    <Compile Include="LibraryCache.cs" />
+    <Compile Include="Libraries.cs" />
+    <Compile Include="LibraryObjects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

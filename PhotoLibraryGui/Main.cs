@@ -184,7 +184,7 @@ namespace PhotoLibrary.Gui
                 // Changes to the status bar as it progresses
                 bw.ProgressChanged += (s, args) =>
                 {
-                    int percentage = 100 * (Navigation.CountValuesWhereThumbnailIsAbsent()) /
+                    int percentage = 100 * (Navigation.CountValuesWhereThumbnailIsPresent()) /
                         Navigation.CountValues(null);
                     if (toolStrip_progressBar != null)
                     {
@@ -243,12 +243,17 @@ namespace PhotoLibrary.Gui
                 // Changes to the status bar as it progresses
                 bw.ProgressChanged += (s, args) =>
                 {
-                    int percentage = 100 * (Navigation.CountValuesWhereThumbnailIsAbsent()) /
+                    int percentage = 100 * (Navigation.CountValuesWhereExifIsPresent()) /
                         Navigation.CountValues(null);
+
                     if (toolStrip_progressBar != null)
                     {
+                        if (!toolStrip_progressBar.Visible)
+                        {
+                            toolStrip_progressBar.Visible = true;
+                        }
                         toolStrip_progressBar.Value = percentage;
-                        toolStrip_news.Text = percentage + Literals.PercentSign + Literals.ExifLoading;
+                        toolStrip_progressText.Text = percentage + Literals.PercentSign + Literals.ExifLoading;
                     }
                 };
 
@@ -258,6 +263,9 @@ namespace PhotoLibrary.Gui
                     toolStrip_progressBar.Value = 0;
                     toolStrip_progressBar.Visible = false;
 
+                    toolStrip_progressText.Visible = false;
+                    toolStrip_progressText.Text = string.Empty;
+                    toolStrip_news.Visible = true;
                     toolStrip_news.Text = Literals.ExifAdded;
 
                     using (BackgroundWorker bw2 = new BackgroundWorker())

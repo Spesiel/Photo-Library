@@ -17,6 +17,7 @@ namespace PhotoLibrary.Cache
 
         private string _exif { get; set; }
 
+        [IgnoreDataMember]
         public int PeopleCount { get; set; }
 
         [IgnoreDataMember]
@@ -68,8 +69,10 @@ namespace PhotoLibrary.Cache
                 {
                     return CacheExif.FromXml(_exif);
                 }
+
                 return new CacheExif();
             }
+
             set
             {
                 _exif = CacheExif.ToXml(value);

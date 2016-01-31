@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace PhotoLibrary.Cache
 {
-    public class LibraryCache : Cache<CacheObject>
+    public class LibraryObjects : Cache<CacheObject>
     {
-        private static PersistentDictionary<string, CacheObject> _LibraryCache = new PersistentDictionary<string, CacheObject>(Constants.CacheFullPath);
+        public LibraryObjects() : base(Constants.CacheFullPath)
+        {
+        }
 
         #region Tags: GetAll/FindBy
 
@@ -17,7 +19,7 @@ namespace PhotoLibrary.Cache
             get
             {
                 List<string> ans = new List<string>();
-                Parallel.ForEach(_LibraryCache.Values.ToList(), Constants.ParallelOptions,
+                Parallel.ForEach(_Library.Values.ToList(), Constants.ParallelOptions,
                     current =>
                     {
                         ans.AddRange(current.Tags);
@@ -29,12 +31,12 @@ namespace PhotoLibrary.Cache
 
         public IEnumerable<CacheObject> FindByTag(string tag)
         {
-            return _LibraryCache.Values.Where(v => v.Tags.Contains(tag));
+            return _Library.Values.Where(v => v.Tags.Contains(tag));
         }
 
         public IEnumerable<CacheObject> FindByTags(IList<string> tags)
         {
-            return _LibraryCache.Values.Where(v => v.Tags.Any(t => tags.Contains(t)));
+            return _Library.Values.Where(v => v.Tags.Any(t => tags.Contains(t)));
         }
 
         #endregion Tags: GetAll/FindBy

@@ -15,10 +15,10 @@ namespace PhotoLibrary
     {
         public static void GenerateThumbnail(Color background, string file)
         {
-            if (LibraryCache.Get(file).Thumbnail == null)
+            if (Libraries.LibraryObjects.Get(file).Thumbnail == null)
             {
                 // Add it to the library
-                LibraryCache.Set(file,
+                Libraries.LibraryObjects.Set(file,
                     GenerateCacheObjectThumbnail(background, AtRuntime.Settings.GetFile(file)));
             }
         }
@@ -28,7 +28,7 @@ namespace PhotoLibrary
         public static void BackgroundFetchForThumbnails(BackgroundWorker worker, Color background)
         {
             // For each media
-            Parallel.ForEach(LibraryCache.Keys.Where(t => LibraryCache.Get(t).Thumbnail == null), Constants.ParallelOptions,
+            Parallel.ForEach(Libraries.LibraryObjects.Keys.Where(t => Libraries.LibraryObjects.Get(t).Thumbnail == null), Constants.ParallelOptions,
                 current =>
                 {
                     // Set TPL Thread priority, saving the old one
@@ -43,8 +43,8 @@ namespace PhotoLibrary
                     // Report progress made
                     lock (new object())
                     {
-                        worker.ReportProgress(100 * (LibraryCache.CountValuesWhere(v => v.Thumbnail == null)) /
-                            LibraryCache.Count);
+                        worker.ReportProgress(100 * Navigation.CountValuesWhereThumbnailIsPresent() /
+                            Navigation.CountValues(null));
                     };
                 });
         }
@@ -52,21 +52,21 @@ namespace PhotoLibrary
         public static void BackgroundFetchForExif(BackgroundWorker worker)
         {
             // For each media
-            Parallel.ForEach(LibraryCache.Keys.Where(t => false.Equals(LibraryCache.Get(t).Exif.HasBeenSet)), Constants.ParallelOptions,
+            Parallel.ForEach(Libraries.LibraryObjects.Keys.Where(t => false.Equals(Libraries.LibraryObjects.Get(t).Exif.HasBeenSet)), Constants.ParallelOptions,
                 current =>
                 {
                     // Set TPL Thread priority, saving the old one
                     var previousPriority = Thread.CurrentThread.Priority;
                     Thread.CurrentThread.Priority = ThreadPriority.Lowest;
 
-                    if (!LibraryCache.Get(current).Exif.HasBeenSet)
+                    if (!Libraries.LibraryObjects.Get(current).Exif.HasBeenSet)
                     {
                         string currentFile = AtRuntime.Settings.GetFile(current);
 
                         // Add it to the library
-                        CacheObject co = LibraryCache.Get(current);
+                        CacheObject co = Libraries.LibraryObjects.Get(current);
                         co.Exif = GetExifFromImage(currentFile);
-                        LibraryCache.Set(current, co);
+                        Libraries.LibraryObjects.Set(current, co);
                     }
 
                     //Reset previous priority of the TPL Thread
@@ -75,8 +75,8 @@ namespace PhotoLibrary
                     // Report progress made
                     lock (new object())
                     {
-                        worker.ReportProgress(100 * (LibraryCache.CountValuesWhere(v => false.Equals(v.Exif.HasBeenSet))) /
-                            LibraryCache.Count);
+                        worker.ReportProgress(100 * Navigation.CountValuesWhereExifIsPresent() /
+                            Navigation.CountValues(null));
                     };
                 });
         }
@@ -198,7 +198,10 @@ namespace PhotoLibrary
                             var previousPriority = Thread.CurrentThread.Priority;
                             Thread.CurrentThread.Priority = ThreadPriority.Lowest;
 
-                            ans.SetValue(Constants.ExifData[current.Id], current.Value);
+                            if (Constants.ExifData.ContainsKey(current.Id))
+                            {
+                                ans.SetValue(Constants.ExifData[current.Id], current.Value);
+                            }
 
                             //Reset previous priority of the TPL Thread
                             Thread.CurrentThread.Priority = previousPriority;

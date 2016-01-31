@@ -7,44 +7,49 @@ namespace PhotoLibrary.Cache
 {
     public abstract class Cache<T>
     {
-        private static PersistentDictionary<string, T> _LibraryCache;
+        internal PersistentDictionary<string, T> _Library;
 
-        public static ReadOnlyCollection<string> Keys { get { return new ReadOnlyCollection<string>(_LibraryCache.Keys.ToList()); } }
+        public ReadOnlyCollection<string> Keys { get { return new ReadOnlyCollection<string>(_Library.Keys.ToList()); } }
+
+        public Cache(string pathToCache)
+        {
+            _Library = new PersistentDictionary<string, T>(pathToCache);
+        }
 
         #region Get/Set
 
-        public static T Get(string key)
+        public T Get(string key)
         {
-            return _LibraryCache[key];
+            return _Library[key];
         }
 
-        public static T Get(string location, int index)
+        public T Get(string location, int index)
         {
             T ans;
             if (location == null)
             {
-                ans = _LibraryCache.ElementAt(index).Value;
+                ans = _Library.ElementAt(index).Value;
             }
             else {
-                ans = _LibraryCache.Where(k => k.Key.StartsWith(location)).ElementAt(index).Value;
+                ans = _Library.Where(k => k.Key.StartsWith(location)).ElementAt(index).Value;
             }
 
             return ans;
         }
 
-        public static void Set(string key, T value)
+        public void Set(string key, T value)
         {
-            if (_LibraryCache.ContainsKey(key))
+            if (_Library.ContainsKey(key))
             {
-                _LibraryCache[key] = value;
+                _Library[key] = value;
             }
             else
             {
-                _LibraryCache.Add(key, value);
+                _Library.Add(key, value);
             }
         }
 
-        public static int GetIndex(string location, string key)
+        public int GetIndex(string location, string key)
         {
             int ans = 0;
             if (location == null)
@@ -59,7 +64,7 @@ namespace PhotoLibrary.Cache
             return ans;
         }
 
-        public static string GetKey(string location, int index)
+        public string GetKey(string location, int index)
         {
             string ans = null;
             if (location == null)
@@ -73,7 +78,7 @@ namespace PhotoLibrary.Cache
             return ans;
         }
 
-        public static Tuple<string, bool> GetPreviousCacheEntry(string location, string key)
+        public Tuple<string, bool> GetPreviousCacheEntry(string location, string key)
         {
             string ans = string.Empty;
 
@@ -95,7 +100,7 @@ namespace PhotoLibrary.Cache
             return new Tuple<string, bool>(ans, getIndex == 0);
         }
 
-        public static Tuple<string, bool> GetNextCacheEntry(string path, string imageKey)
+        public Tuple<string, bool> GetNextCacheEntry(string path, string imageKey)
         {
             string ans = string.Empty;
 
@@ -121,61 +126,64 @@ namespace PhotoLibrary.Cache
 
         #region Add/Remove
 
-        public static void Add(string key, T value)
+        public void Add(string key, T value)
         {
-            if (_LibraryCache.ContainsKey(key))
+            if (_Library.ContainsKey(key))
             {
-                _LibraryCache[key] = (T)value;
+                _Library[key] = (T)value;
             }
             else
             {
-                _LibraryCache.Add(key, (T)value);
+                _Library.Add(key, (T)value);
             }
         }
 
-        public static bool Remove(string key)
+        internal bool Remove(string key)
         {
-            return _LibraryCache.Remove(key);
+            return _Library.Remove(key);
         }
 
         #endregion Add/Remove
 
         #region Counting the cache
 
-        public static int Count { get { return _LibraryCache.Count; } }
+        public int Count { get { return _Library.Count; } }
 
-        public static int CountValues(string location)
+        public int CountValues(string location)
         {
             int ans = 0;
             if (location == null)
             {
-                ans = _LibraryCache.Count;
+                ans = _Library.Count;
             }
             else {
-                ans = _LibraryCache.Count(item => item.Key.StartsWith(location));
+                ans = _Library.Count(item => item.Key.StartsWith(location));
             }
 
             return ans;
         }
 
-        public static int CountValuesWhere(Func<T, bool> predicate)
+        public int CountValuesWhere(Func<T, bool> predicate)
         {
-            return _LibraryCache.Values.Count(predicate);
+            return _Library.Values.Count(predicate);
         }
 
         #endregion Counting the cache
 
-        public static void Flush()
+        public void Flush()
         {
-            _LibraryCache.Flush();
+            _Library.Flush();
         }
 
-        public static void Clear()
+        public void Clear()
         {
-            if (PersistentDictionaryFile.Exists(_LibraryCache.DatabasePath))
-            {
-                PersistentDictionaryFile.DeleteFiles(_LibraryCache.DatabasePath);
-            }
+            string path = _Library.DatabasePath;
+
+            _Library.Dispose();
+            _Library = null;
+
+            PersistentDictionaryFile.DeleteFiles(path);
+            _Library = new PersistentDictionary<string, T>(path);
         }
     }
 }
