@@ -4,10 +4,10 @@ using System.Linq;
 
 namespace PhotoLibrary.Cache
 {
-    public class Timers : CacheList<TimeSpan>
+    public class Timings : CacheList<TimeSpan>
     {
         //FIXME Change the path
-        public Timers() : base(Constants.CacheFullPath + "Timers")
+        public Timings() : base(Constants.CacheFullPath + "Timers")
         {
         }
 

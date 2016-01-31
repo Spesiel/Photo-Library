@@ -10,7 +10,7 @@ namespace PhotoLibrary.Cache
 {
     public abstract class CacheList<T> : CacheSingleton<T> where T : new()
     {
-        public CacheList(string pathToCache) : base(pathToCache)
+        protected CacheList(string pathToCache) : base(pathToCache)
         {
         }
 

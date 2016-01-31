@@ -61,7 +61,7 @@
     <Compile Include="Objects\Person.cs" />
     <Compile Include="Persons.cs" />
     <Compile Include="CacheList.cs" />
-    <Compile Include="Timers.cs" />
+    <Compile Include="Timings.cs" />
     <Compile Include="CLSCompliant.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="CacheSingleton.cs" />

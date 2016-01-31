@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace PhotoLibrary.Cache
 {
-    public abstract class CacheSingleton<T>
+    public abstract class CacheSingleton<T> : IDisposable
     {
         internal PersistentDictionary<string, T> _Library;
 
         public virtual ReadOnlyCollection<string> Keys { get { return new ReadOnlyCollection<string>(_Library.Keys.ToList()); } }
 
-        public CacheSingleton(string pathToCache)
+        protected CacheSingleton(string pathToCache)
         {
             _Library = new PersistentDictionary<string, T>(pathToCache);
         }
@@ -202,5 +202,32 @@ namespace PhotoLibrary.Cache
             PersistentDictionaryFile.DeleteFiles(path);
             _Library = new PersistentDictionary<string, T>(path);
         }
+
+        #region IDisposable Support
+
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _Library.Dispose();
+                }
+
+                _Library = null;
+
+                disposedValue = true;
+            }
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        #endregion IDisposable Support
     }
 }

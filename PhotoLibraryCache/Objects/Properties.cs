@@ -11,18 +11,18 @@ namespace PhotoLibrary.Cache.Objects
     [Serializable]
     public struct Properties
     {
-        private string _thumbnail { get; set; }
+        private string _Thumbnail { get; set; }
 
-        private string _tags { get; set; }
+        private string _Tags { get; set; }
 
         [IgnoreDataMember]
         public Image Thumbnail
         {
             get
             {
-                if (!string.IsNullOrEmpty(_thumbnail))
+                if (!string.IsNullOrEmpty(_Thumbnail))
                 {
-                    using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(_thumbnail)))
+                    using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(_Thumbnail)))
                     {
                         return Image.FromStream(ms);
                     }
@@ -36,7 +36,7 @@ namespace PhotoLibrary.Cache.Objects
                     using (MemoryStream ms = new MemoryStream())
                     {
                         value.Save(ms, ImageFormat.Jpeg);
-                        _thumbnail = Convert.ToBase64String(ms.ToArray());
+                        _Thumbnail = Convert.ToBase64String(ms.ToArray());
                     }
                 }
             }
@@ -47,11 +47,11 @@ namespace PhotoLibrary.Cache.Objects
         {
             get
             {
-                if (_tags == null)
+                if (_Tags == null)
                 {
                     return new List<string>();
                 }
-                return _tags.Split('|');
+                return _Tags.Split('|');
             }
         }
 
@@ -86,9 +86,41 @@ namespace PhotoLibrary.Cache.Objects
 
         private void SaveTags(List<string> tags)
         {
-            _tags = string.Join("|", tags.Distinct().OrderBy(t => t));
+            _Tags = string.Join("|", tags.Distinct().OrderBy(t => t));
         }
 
         #endregion Tags: Add/Remove
+
+        public override int GetHashCode()
+        {
+            return Tags.GetHashCode() ^ Thumbnail.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Properties))
+                return false;
+
+            return Equals((Properties)obj);
+        }
+
+        public bool Equals(Properties other)
+        {
+            if (_Tags != other._Tags ||
+                _Thumbnail != other._Thumbnail)
+                return false;
+
+            return true;
+        }
+
+        public static bool operator ==(Properties item1, Properties item2)
+        {
+            return item1.Equals(item2);
+        }
+
+        public static bool operator !=(Properties item1, Properties item2)
+        {
+            return !item1.Equals(item2);
+        }
     }
 }
