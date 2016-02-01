@@ -59,6 +59,7 @@
     <Compile Include="Objects\Exif.cs" />
     <Compile Include="Objects\Item.cs" />
     <Compile Include="Objects\Person.cs" />
+    <Compile Include="Objects\Timing.cs" />
     <Compile Include="Persons.cs" />
     <Compile Include="CacheList.cs" />
     <Compile Include="Tags.cs" />

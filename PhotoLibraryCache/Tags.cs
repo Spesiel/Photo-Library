@@ -1,6 +1,4 @@
 ﻿using PhotoLibrary.Reference;
-using System;
-using System.Linq;
 
 namespace PhotoLibrary.Cache
 {

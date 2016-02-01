@@ -1,10 +1,11 @@
-﻿using PhotoLibrary.Reference;
+﻿using PhotoLibrary.Cache.Objects;
+using PhotoLibrary.Reference;
 using System;
 using System.Linq;
 
 namespace PhotoLibrary.Cache
 {
-    public class Timings : CacheList<TimeSpan>
+    public class Timings : CacheList<Timing>
     {
         //FIXME Change the path
         public Timings() : base(Constants.CacheFullPath + "Timers")
@@ -13,12 +14,12 @@ namespace PhotoLibrary.Cache
 
         public TimeSpan GetTotalTime(string key)
         {
-            return GetAll(key).Aggregate(new TimeSpan(0), (p, v) => p.Add(v));
+            return GetAll(key).Aggregate(new TimeSpan(0), (p, v) => p.Add(v.Timer));
         }
 
-        public override void Add(string key, TimeSpan value)
+        public override void Add(string key, Timing value)
         {
-            if (value.TotalSeconds >= Math.PI)
+            if (value.Timer.TotalSeconds >= Math.PI)
             {
                 base.Add(key, value);
             }
