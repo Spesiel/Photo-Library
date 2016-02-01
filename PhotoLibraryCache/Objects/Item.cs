@@ -1,17 +1,47 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Runtime.Serialization;
 
 namespace PhotoLibrary.Cache.Objects
 {
     [Serializable]
     public struct Item
     {
-        public Properties Properties { get; set; }
-
+        private string _Thumbnail { get; set; }
         public Exif Exif { get; set; }
+
+        [IgnoreDataMember]
+        public Image Thumbnail
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(_Thumbnail))
+                {
+                    using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(_Thumbnail)))
+                    {
+                        return Image.FromStream(ms);
+                    }
+                }
+                return null;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        value.Save(ms, ImageFormat.Jpeg);
+                        _Thumbnail = Convert.ToBase64String(ms.ToArray());
+                    }
+                }
+            }
+        }
 
         public override int GetHashCode()
         {
-            return Properties.GetHashCode() ^ Exif.GetHashCode();
+            return _Thumbnail.GetHashCode() ^ Exif.GetHashCode();
         }
 
         public override bool Equals(object obj)
@@ -24,7 +54,7 @@ namespace PhotoLibrary.Cache.Objects
 
         public bool Equals(Item other)
         {
-            if (Properties != other.Properties || Exif != other.Exif)
+            if (_Thumbnail != other._Thumbnail || Exif != other.Exif)
                 return false;
 
             return true;

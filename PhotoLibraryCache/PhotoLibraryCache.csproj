@@ -61,13 +61,13 @@
     <Compile Include="Objects\Person.cs" />
     <Compile Include="Persons.cs" />
     <Compile Include="CacheList.cs" />
+    <Compile Include="Tags.cs" />
     <Compile Include="Timings.cs" />
     <Compile Include="CLSCompliant.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="CacheSingleton.cs" />
     <Compile Include="Libraries.cs" />
     <Compile Include="Items.cs" />
-    <Compile Include="Objects\Properties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

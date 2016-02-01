@@ -26,11 +26,6 @@ namespace PhotoLibrary.Cache
             return _Library[key];
         }
 
-        public IEnumerable<T> GetAll(string key)
-        {
-            return _Library.Where(lib => lib.Key.StartsWith(key)).Select(lib => lib.Value);
-        }
-
         public T Get(string location, int index)
         {
             T ans;

@@ -16,7 +16,7 @@ namespace PhotoLibrary
     {
         public static void GenerateThumbnail(Color background, string file)
         {
-            if (Libraries.Items.Get(file).Properties.Thumbnail == null)
+            if (Libraries.Items.Get(file).Thumbnail == null)
             {
                 // Add it to the library
                 Libraries.Items.Set(file,
@@ -29,7 +29,7 @@ namespace PhotoLibrary
         public static void BackgroundFetchForThumbnails(BackgroundWorker worker, Color background)
         {
             // For each media
-            Parallel.ForEach(Libraries.Items.Keys.Where(t => Libraries.Items.Get(t).Properties.Thumbnail == null), Constants.ParallelOptions,
+            Parallel.ForEach(Libraries.Items.Keys.Where(t => Libraries.Items.Get(t).Thumbnail == null), Constants.ParallelOptions,
                 current =>
                 {
                     // Set TPL Thread priority, saving the old one
@@ -123,9 +123,7 @@ namespace PhotoLibrary
                 g.DrawImage(temp, x, y);
             }
 
-            Properties prop = new Properties();
-            prop.Thumbnail = target;
-            ans.Properties = prop;
+            ans.Thumbnail = target;
 
             return ans;
         }

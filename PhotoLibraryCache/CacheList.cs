@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PhotoLibrary.Cache
 {
-    public abstract class CacheList<T> : CacheSingleton<T> where T : new()
+    public abstract class CacheList<T> : CacheSingleton<T>
     {
         protected CacheList(string pathToCache) : base(pathToCache)
         {
@@ -28,6 +28,11 @@ namespace PhotoLibrary.Cache
 
                 return new ReadOnlyCollection<string>(keys);
             }
+        }
+
+        public IEnumerable<T> GetAll(string key)
+        {
+            return _Library.Where(lib => lib.Key.StartsWith(key)).Select(lib => lib.Value);
         }
 
         public override void Add(string key, T value)
