@@ -126,6 +126,9 @@
   <data name="ExifLoading" xml:space="preserve">
     <value> exif data loading...</value>
   </data>
+  <data name="GuidSeparator" xml:space="preserve">
+    <value>|</value>
+  </data>
   <data name="LoadingDone" xml:space="preserve">
     <value>Loaded!</value>
   </data>

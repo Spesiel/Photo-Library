@@ -23,7 +23,7 @@ namespace PhotoLibrary.Cache
 
         public T Get(string key)
         {
-            return _Library[key];
+            return _Library.Where(i => i.Key.StartsWith(key)).Single().Value;
         }
 
         public T Get(string location, int index)
@@ -34,10 +34,15 @@ namespace PhotoLibrary.Cache
                 ans = _Library.ElementAt(index).Value;
             }
             else {
-                ans = _Library.Where(k => k.Key.StartsWith(location)).ElementAt(index).Value;
+                ans = _Library.Where(i => i.Key.StartsWith(location)).ElementAt(index).Value;
             }
 
             return ans;
+        }
+
+        public IEnumerable<T> GetAll(string key)
+        {
+            return _Library.Where(i => i.Key.StartsWith(key)).Select(i => i.Value);
         }
 
         public void Set(string key, T value)
@@ -143,12 +148,12 @@ namespace PhotoLibrary.Cache
 
         internal virtual bool Remove(string key)
         {
-            return _Library.Remove(key);
+            return _Library.Remove(Keys.Where(i => i.StartsWith(key, StringComparison.OrdinalIgnoreCase)).Single());
         }
 
         public void RemoveAll(string key)
         {
-            Parallel.ForEach(_Library.Where(lib => lib.Key.StartsWith(key)), Constants.ParallelOptions,
+            Parallel.ForEach(_Library.Where(lib => lib.Key.StartsWith(key, StringComparison.OrdinalIgnoreCase)), Constants.ParallelOptions,
                 current =>
                 {
                     _Library.Remove(current);

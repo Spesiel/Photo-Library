@@ -88,6 +88,15 @@ namespace PhotoLibrary.Reference.Globalization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to |.
+        /// </summary>
+        public static string GuidSeparator {
+            get {
+                return ResourceManager.GetString("GuidSeparator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Loaded!.
         /// </summary>
         public static string LoadingDone {
