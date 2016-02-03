@@ -6,12 +6,12 @@ namespace PhotoLibrary.Cache.Objects
     public struct Person
     {
         public string DisplayName { get; set; }
-        public string Firstname { get; set; }
-        public string Lastname { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
 
         public override int GetHashCode()
         {
-            return Firstname.GetHashCode() ^ Lastname.GetHashCode();
+            return FirstName.GetHashCode() ^ LastName.GetHashCode();
         }
 
         public override bool Equals(object obj)
@@ -24,7 +24,7 @@ namespace PhotoLibrary.Cache.Objects
 
         public bool Equals(Person other)
         {
-            if (Firstname != other.Firstname || Lastname != other.Lastname)
+            if (FirstName != other.FirstName || LastName != other.LastName)
                 return false;
 
             return true;

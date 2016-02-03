@@ -171,7 +171,7 @@ namespace PhotoLibrary.Cache
                 ans = _Library.Count();
             }
             else {
-                ans = Pairs.Keys.Count(i => i.StartsWith(location));
+                ans = Pairs.Keys.Count(i => i.StartsWith(location, StringComparison.OrdinalIgnoreCase));
             }
 
             return ans;
