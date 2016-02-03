@@ -1,10 +1,8 @@
 ﻿using Microsoft.Isam.Esent.Collections.Generic;
-using PhotoLibrary.Reference;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace PhotoLibrary.Cache
 {
@@ -12,18 +10,7 @@ namespace PhotoLibrary.Cache
     {
         internal PersistentDictionary<Guid, T> _Library;
 
-        public ReadOnlyCollection<string> Keys
-        {
-            get
-            {
-                return new ReadOnlyCollection<string>(
-                    Index.Library.Where(i => _Library.Keys.Any(k => k.Equals(i.Key))).
-                    Select(i => i.Value).
-                    Distinct().OrderBy(o => o).ToList());
-            }
-        }
-
-        private ReadOnlyDictionary<string, Guid> Pairs
+        public ReadOnlyDictionary<string, Guid> Pairs
         {
             get
             {
@@ -88,11 +75,11 @@ namespace PhotoLibrary.Cache
             int ans = 0;
             if (location == null)
             {
-                ans = Keys.IndexOf(key);
+                ans = Pairs.Keys.ToList().IndexOf(key);
             }
             else
             {
-                ans = Keys.Where(k => k.StartsWith(location, StringComparison.OrdinalIgnoreCase)).ToList().IndexOf(key);
+                ans = Pairs.Keys.Where(k => k.StartsWith(location, StringComparison.OrdinalIgnoreCase)).ToList().IndexOf(key);
             }
 
             return ans;
@@ -103,10 +90,10 @@ namespace PhotoLibrary.Cache
             string ans = null;
             if (location == null)
             {
-                ans = Keys.ElementAt(index);
+                ans = Pairs.Keys.ElementAt(index);
             }
             else {
-                ans = Keys.Where(k => k.StartsWith(location, StringComparison.OrdinalIgnoreCase)).ElementAt(index);
+                ans = Pairs.Keys.Where(k => k.StartsWith(location, StringComparison.OrdinalIgnoreCase)).ElementAt(index);
             }
 
             return ans;
@@ -124,11 +111,11 @@ namespace PhotoLibrary.Cache
 
             if (location == null)
             {
-                ans = Keys[getIndex];
+                ans = Pairs.Keys.ToList()[getIndex];
             }
             else
             {
-                ans = Keys.Where(k => k.StartsWith(location, StringComparison.OrdinalIgnoreCase)).ToList()[getIndex];
+                ans = Pairs.Keys.Where(k => k.StartsWith(location, StringComparison.OrdinalIgnoreCase)).ToList()[getIndex];
             }
 
             return new Tuple<string, bool>(ans, getIndex == 0);
@@ -146,11 +133,11 @@ namespace PhotoLibrary.Cache
 
             if (path == null)
             {
-                ans = Keys[getIndex];
+                ans = Pairs.Keys.ToList()[getIndex];
             }
             else
             {
-                ans = Keys.Where(k => k.StartsWith(path, StringComparison.OrdinalIgnoreCase)).ToList()[getIndex];
+                ans = Pairs.Keys.Where(k => k.StartsWith(path, StringComparison.OrdinalIgnoreCase)).ToList()[getIndex];
             }
 
             return new Tuple<string, bool>(ans, getIndex == CountValues(path) - 1);
@@ -184,7 +171,7 @@ namespace PhotoLibrary.Cache
                 ans = _Library.Count();
             }
             else {
-                ans = Keys.Count(i => i.StartsWith(location));
+                ans = Pairs.Keys.Count(i => i.StartsWith(location, StringComparison.OrdinalIgnoreCase));
             }
 
             return ans;

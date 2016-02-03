@@ -17,11 +17,11 @@ namespace PhotoLibrary.Cache
             return GetAll(key).Aggregate(new TimeSpan(0), (p, v) => p.Add(v.Timer));
         }
 
-        public override void Add(string key, Timing value)
+        public override void Add(string path, Timing value)
         {
             if (value.Timer.TotalSeconds >= Math.PI)
             {
-                base.Add(key, value);
+                base.Add(path, value);
             }
         }
     }
