@@ -1,36 +1,40 @@
 ﻿using Microsoft.Isam.Esent.Collections.Generic;
 using PhotoLibrary.Reference;
+using PhotoLibrary.Reference.Globalization;
 using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PhotoLibrary.Cache
 {
-    internal static class Index
+    public static class Index
     {
         //FIXME Change the path
         private static PersistentDictionary<Guid, string> _Library = new PersistentDictionary<Guid, string>(Constants.CacheFullPath + "Index");
 
         public static PersistentDictionary<Guid, string> Library { get { return _Library; } }
 
-        public static Guid Add(string key)
+        public static IEnumerable<Guid> Get(string path)
         {
-            Guid ans = Guid.NewGuid();
-
-            Library.Add(ans, key);
-
-            return ans;
+            return Library.Where(i => i.Value.Equals(path)).Select(i => i.Key);
         }
 
-        public static bool Remove(string key)
+        public static string FromGuid(Guid key)
+        {
+            return Library[key] + Literals.GuidSeparator + key.ToString();
+        }
+
+        public static Guid Add(string path)
+        {
+            Guid guid = Guid.NewGuid();
+            Library.Add(guid, path);
+            return guid;
+        }
+
+        public static bool Remove(Guid key)
         {
             bool ans = true;
-
-            Parallel.ForEach(Library.Where(i => i.Value.Equals(key)), Constants.ParallelOptions,
-                current =>
-                {
-                    Library.Remove(current.Key);
-                });
-
+            Library.Where(i => i.Key == key).AsParallel().ForAll(i => ans &= Library.Remove(i.Key));
             return ans;
         }
 
@@ -45,9 +49,11 @@ namespace PhotoLibrary.Cache
         {
             string path = Library.DatabasePath;
 
+            // Dispose of the current library
             Library.Dispose();
             _Library = null;
 
+            // Create a brand new one
             PersistentDictionaryFile.DeleteFiles(path);
             _Library = new PersistentDictionary<Guid, string>(path);
         }
