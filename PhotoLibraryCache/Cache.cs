@@ -10,26 +10,44 @@ namespace PhotoLibrary.Cache
 {
     public abstract class Cache<T> : IDisposable
     {
-        internal PersistentDictionary<string, T> _Library;
+        internal PersistentDictionary<Guid, T> _Library;
 
         public ReadOnlyCollection<string> Keys
         {
             get
             {
-                return new ReadOnlyCollection<string>(Index.Library.Where(i => _Library.ContainsKey(Index.FromGuid(i.Key, i.Value))).Select(i => i.Value).OrderBy(i => i).ToList());
+                return new ReadOnlyCollection<string>(
+                    Index.Library.Where(i => _Library.Keys.Any(k => k.Equals(i.Key))).
+                    Select(i => i.Value).
+                    Distinct().OrderBy(o => o).ToList());
+            }
+        }
+
+        private ReadOnlyDictionary<string, Guid> Pairs
+        {
+            get
+            {
+                return new ReadOnlyDictionary<string, Guid>(
+                    Index.Library.Where(i => _Library.Keys.Any(k => k.Equals(i.Key))).
+                    Distinct().OrderBy(o => o.Value).ToDictionary(p => p.Value, p => p.Key));
             }
         }
 
         protected Cache(string pathToCache)
         {
-            _Library = new PersistentDictionary<string, T>(pathToCache);
+            _Library = new PersistentDictionary<Guid, T>(pathToCache);
         }
 
         #region Get/Set
 
-        public T Get(string key)
+        public T Get(Guid key)
         {
-            return _Library[Index.FromGuid(key)];
+            return _Library[key];
+        }
+
+        public T Get(string path)
+        {
+            return _Library[Index.Get(path).Single()];
         }
 
         public T Get(string location, int index)
@@ -37,29 +55,31 @@ namespace PhotoLibrary.Cache
             T ans;
             if (location == null)
             {
-                ans = _Library[Keys.ElementAt(index)];
+                ans = _Library[Pairs.ElementAt(index).Value];
             }
             else {
-                ans = _Library.Where(i => i.Key.StartsWith(location)).ElementAt(index).Value;
+                ans = _Library[Pairs.
+                    Where(i => i.Key.StartsWith(location, StringComparison.OrdinalIgnoreCase)).
+                    ElementAt(index).Value];
             }
 
             return ans;
         }
 
-        public IEnumerable<T> GetAll(string key)
+        public IEnumerable<T> GetAll(string path)
         {
-            return _Library.Where(i => i.Key.StartsWith(key)).Select(i => i.Value);
+            return _Library.Where(l => Index.Get(path).Any(g => g.Equals(l.Key))).Select(i => i.Value);
         }
 
-        public void Set(string key, T value)
+        public void Set(string path, T value)
         {
-            if (Index.Library.ContainsValue(key))
+            if (Index.Library.ContainsValue(path))
             {
-                _Library[Index.FromGuid(key)] = value;
+                _Library[Index.Get(path).Single()] = value;
             }
             else
             {
-                Add(key, value);
+                Add(path, value);
             }
         }
 
@@ -140,31 +160,14 @@ namespace PhotoLibrary.Cache
 
         #region Add/Remove
 
-        public virtual void Add(string key, T value)
+        public virtual void Add(string path, T value)
         {
-            if (Index.Library.ContainsValue(key))
-            {
-                _Library[Index.FromGuid(key)] = value;
-            }
-            else
-            {
-                _Library.Add(Index.Add(key), value);
-            }
+            _Library.Add(Index.Add(path), value);
         }
 
-        internal bool Remove(string key)
+        internal bool Remove(Guid key)
         {
-            return _Library.Remove(_Library.Where(i => i.Key.StartsWith(key, StringComparison.OrdinalIgnoreCase)).Single());
-        }
-
-        public void RemoveAll(string key)
-        {
-            Parallel.ForEach(_Library.Where(i => i.Key.StartsWith(key, StringComparison.OrdinalIgnoreCase)),
-                Constants.ParallelOptions,
-                current =>
-                {
-                    _Library.Remove(current);
-                });
+            return _Library.Remove(key);
         }
 
         #endregion Add/Remove
@@ -212,7 +215,7 @@ namespace PhotoLibrary.Cache
             _Library = null;
 
             PersistentDictionaryFile.DeleteFiles(path);
-            _Library = new PersistentDictionary<string, T>(path);
+            _Library = new PersistentDictionary<Guid, T>(path);
         }
 
         #region IDisposable Support

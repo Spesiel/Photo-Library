@@ -1,4 +1,8 @@
-﻿namespace PhotoLibrary.Cache
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace PhotoLibrary.Cache
 {
     public static class Libraries
     {
@@ -12,7 +16,7 @@
         public static Timings Timers { get { return _Timers; } }
         public static Tags Tags { get { return _Tags; } }
 
-        public static void Remove(string key)
+        public static void Remove(Guid key)
         {
             Items.Remove(key);
             Persons.Remove(key);
@@ -20,6 +24,11 @@
             Timers.Remove(key);
 
             Index.Remove(key);
+        }
+
+        public static void Remove(IEnumerable<Guid> keys)
+        {
+            keys.AsParallel().ForAll(k => Remove(k));
         }
 
         public static void Flush()

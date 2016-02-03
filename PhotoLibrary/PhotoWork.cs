@@ -121,7 +121,7 @@ namespace PhotoLibrary
                 current =>
                 {
                     // Remove it to the library
-                    Libraries.Remove(current.Replace(AtRuntime.Settings.GetDirectory, ""));
+                    Libraries.Remove(Index.Get(current.Replace(AtRuntime.Settings.GetDirectory, "")));
                 });
         }
 
