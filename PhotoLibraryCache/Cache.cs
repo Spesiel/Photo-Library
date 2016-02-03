@@ -12,19 +12,24 @@ namespace PhotoLibrary.Cache
     {
         internal PersistentDictionary<Guid, T> _Library;
 
-        public IEnumerable<Tuple<string, T, Guid>> Library
-        {
-            get
-            {
-                return Index.Library.Where(i => _Library.ContainsKey(i.Key)).OrderBy(i => i.Value).Select(a => Tuple.Create(a.Value, _Library[a.Key], a.Key));
-            }
-        }
-
         public ReadOnlyCollection<string> Keys
         {
             get
             {
-                return new ReadOnlyCollection<string>(Index.Library.Where(i => _Library.ContainsKey(i.Key)).Select(i => i.Value).OrderBy(i => i).ToList());
+                return new ReadOnlyCollection<string>(
+                    Index.Library.Where(i => _Library.Keys.Any(k => k.Equals(i.Key))).
+                    Select(i => i.Value).
+                    Distinct().OrderBy(o => o).ToList());
+            }
+        }
+
+        private ReadOnlyDictionary<string, Guid> Pairs
+        {
+            get
+            {
+                return new ReadOnlyDictionary<string, Guid>(
+                    Index.Library.Where(i => _Library.Keys.Any(k => k.Equals(i.Key))).
+                    Distinct().OrderBy(o => o.Value).ToDictionary(p => p.Value, p => p.Key));
             }
         }
 
@@ -35,9 +40,14 @@ namespace PhotoLibrary.Cache
 
         #region Get/Set
 
-        public T Get(string key)
+        public T Get(Guid key)
         {
-            return _Library[Index.Library.Where(i => i.Value.Equals(key)).Select(i => i.Key).Single()];
+            return _Library[key];
+        }
+
+        public T Get(string path)
+        {
+            return _Library[Index.Get(path).Single()];
         }
 
         public T Get(string location, int index)
@@ -45,29 +55,31 @@ namespace PhotoLibrary.Cache
             T ans;
             if (location == null)
             {
-                ans = Library.ElementAt(index).Item2;
+                ans = _Library[Pairs.ElementAt(index).Value];
             }
             else {
-                ans = Library.Where(i => i.Item1.StartsWith(location)).ElementAt(index).Item2;
+                ans = _Library[Pairs.
+                    Where(i => i.Key.StartsWith(location, StringComparison.OrdinalIgnoreCase)).
+                    ElementAt(index).Value];
             }
 
             return ans;
         }
 
-        public IEnumerable<T> GetAll(string key)
+        public IEnumerable<T> GetAll(string path)
         {
-            return Library.Where(i => i.Item1.StartsWith(key)).Select(i => i.Item2);
+            return _Library.Where(l => Index.Get(path).Any(g => g.Equals(l.Key))).Select(i => i.Value);
         }
 
-        public void Set(string key, T value)
+        public void Set(string path, T value)
         {
-            if (Index.Library.ContainsValue(key))
+            if (Index.Library.ContainsValue(path))
             {
-                _Library[Index.Library.Where(i => i.Value.Equals(key)).Single().Key] = value;
+                _Library[Index.Get(path).Single()] = value;
             }
             else
             {
-                Add(key, value);
+                Add(path, value);
             }
         }
 
@@ -148,31 +160,14 @@ namespace PhotoLibrary.Cache
 
         #region Add/Remove
 
-        public virtual void Add(string key, T value)
+        public virtual void Add(string path, T value)
         {
-            if (Index.Library.ContainsValue(key))
-            {
-                _Library[Library.Where(i => i.Item1.Equals(key)).Single().Item3] = value;
-            }
-            else
-            {
-                _Library.Add(Index.Add(key), value);
-            }
+            _Library.Add(Index.Add(path), value);
         }
 
-        internal bool Remove(string key)
+        internal bool Remove(Guid key)
         {
-            return _Library.Remove(Library.Where(i => i.Item1.StartsWith(key, StringComparison.OrdinalIgnoreCase)).Single().Item3);
-        }
-
-        public void RemoveAll(string key)
-        {
-            Parallel.ForEach(Library.Where(i => i.Item1.StartsWith(key, StringComparison.OrdinalIgnoreCase)),
-                Constants.ParallelOptions,
-                current =>
-                {
-                    _Library.Remove(current.Item3);
-                });
+            return _Library.Remove(key);
         }
 
         #endregion Add/Remove
