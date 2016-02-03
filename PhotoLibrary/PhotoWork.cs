@@ -66,11 +66,11 @@ namespace PhotoLibrary
             // We got the library loaded, now we should check its integrity
             List<string> mediasOnDisk = GetListMediasInInitialDirectory().ConvertAll(s => s.Replace(AtRuntime.Settings.GetDirectory, ""));
             //// Lists the medias missing in the library (aka New content)
-            List<string> newContent = mediasOnDisk.Except(Libraries.Items.Keys).ToList().ConvertAll(s => s.Insert(0, AtRuntime.Settings.GetDirectory));
+            List<string> newContent = mediasOnDisk.Except(Libraries.Items.Pairs.Keys).ToList().ConvertAll(s => s.Insert(0, AtRuntime.Settings.GetDirectory));
             ans[0] = newContent.Count;
             AddToLibrary(null, newContent);
             //// Lists the medias missing in the initial directory (aka Missing content)
-            List<string> missingContent = mediasOnDisk.Except(Libraries.Items.Keys).ToList();
+            List<string> missingContent = mediasOnDisk.Except(Libraries.Items.Pairs.Keys).ToList();
             ans[1] = missingContent.Count;
             RemoveFromLibrary(missingContent);
 
