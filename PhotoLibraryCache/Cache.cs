@@ -240,6 +240,7 @@ namespace PhotoLibrary.Cache
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         #endregion IDisposable Support
