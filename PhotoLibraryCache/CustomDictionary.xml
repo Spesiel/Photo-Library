@@ -24,6 +24,9 @@
       <Word>Subsec</Word>
       <Word>Ver</Word>
       <Word>Dop</Word>
+      <!-- Spellings -->
+      <Word>Firstname</Word>
+      <Word>Lastname</Word>
     </Recognized>
     <Deprecated>
       <!--Term PreferredAlternate=""></Term-->
