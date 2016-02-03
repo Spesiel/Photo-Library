@@ -1,6 +1,4 @@
-﻿using PhotoLibrary.Reference;
-using System;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace PhotoLibrary.Cache.Objects
 {
