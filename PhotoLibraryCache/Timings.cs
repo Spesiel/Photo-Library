@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace PhotoLibrary.Cache
 {
-    public class Timings : CacheList<Timing>
+    public class Timings : Cache<Timing>
     {
         //FIXME Change the path
         public Timings() : base(Constants.CacheFullPath + "Timers")

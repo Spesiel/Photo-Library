@@ -56,17 +56,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Index.cs" />
     <Compile Include="Objects\Exif.cs" />
     <Compile Include="Objects\Item.cs" />
     <Compile Include="Objects\Person.cs" />
     <Compile Include="Objects\Timing.cs" />
     <Compile Include="Persons.cs" />
-    <Compile Include="CacheList.cs" />
     <Compile Include="Tags.cs" />
     <Compile Include="Timings.cs" />
     <Compile Include="CLSCompliant.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="CacheSingleton.cs" />
+    <Compile Include="Cache.cs" />
     <Compile Include="Libraries.cs" />
     <Compile Include="Items.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

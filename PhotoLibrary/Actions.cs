@@ -18,9 +18,11 @@ namespace PhotoLibrary
         {
             if (Libraries.Items.Get(file).Thumbnail == null)
             {
+                string fileGotten = AtRuntime.Settings.GetFile(file);
+                Item item = GenerateCacheObjectThumbnail(background, fileGotten);
+                //TODO Can be improved? item.Exif = GetExifFromFile(fileGotten);
                 // Add it to the library
-                Libraries.Items.Set(file,
-                    GenerateCacheObjectThumbnail(background, AtRuntime.Settings.GetFile(file)));
+                Libraries.Items.Set(file, item);
             }
         }
 
@@ -29,14 +31,14 @@ namespace PhotoLibrary
         public static void BackgroundFetchForThumbnails(BackgroundWorker worker, Color background)
         {
             // For each media
-            Parallel.ForEach(Libraries.Items.Keys.Where(t => Libraries.Items.Get(t).Thumbnail == null), Constants.ParallelOptions,
+            Parallel.ForEach(Libraries.Items.Library.Where(i => i.Item2.Thumbnail == null), Constants.ParallelOptions,
                 current =>
                 {
                     // Set TPL Thread priority, saving the old one
                     var previousPriority = Thread.CurrentThread.Priority;
                     Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
-                    GenerateThumbnail(background, current);
+                    GenerateThumbnail(background, current.Item1);
 
                     //Reset previous priority of the TPL Thread
                     Thread.CurrentThread.Priority = previousPriority;
@@ -66,7 +68,7 @@ namespace PhotoLibrary
 
                         // Add it to the library
                         Item co = Libraries.Items.Get(current);
-                        co.Exif = GetExifFromImage(currentFile);
+                        co.Exif = GetExifFromFile(currentFile);
                         Libraries.Items.Set(current, co);
                     }
 
@@ -103,7 +105,15 @@ namespace PhotoLibrary
             {
                 if (Constants.AllowedExtensionsImages().Any(pathToFile.ToUpperInvariant().EndsWith))
                 {
-                    temp = GenerateThumbnailPhoto(pathToFile);
+                    using (FileStream fs = new FileStream(pathToFile, FileMode.Open, FileAccess.Read))
+                    {
+                        using (Image image = Image.FromStream(fs, true, false))
+                        {
+                            //temp = GenerateThumbnailPhoto(pathToFile);
+                            temp = ScaleImage(image, 128, 128);
+                            ans.Exif = GetExifFromImage(image);
+                        }
+                    }
                 }
                 else
                 {
@@ -134,15 +144,17 @@ namespace PhotoLibrary
         /// <param name="pathToFile">The complete path to the file to open</param>
         ///
         /// <returns>The generated thumbnail</returns>
-        private static Image GenerateThumbnailPhoto(String pathToFile)
+        private static Image GenerateThumbnailPhoto(string pathToFile)
         {
+            Image ans;
             using (FileStream fs = new FileStream(pathToFile, FileMode.Open, FileAccess.Read))
             {
                 using (Image image = Image.FromStream(fs, true, false))
                 {
-                    return ScaleImage(image, 128, 128);
+                    ans = ScaleImage(image, 128, 128);
                 }
             }
+            return ans;
         }
 
         /// <summary>
@@ -185,7 +197,7 @@ namespace PhotoLibrary
 
         #endregion Thumbnail generation and Image manipulation
 
-        public static Exif GetExifFromImage(string pathToFile)
+        public static Exif GetExifFromFile(string pathToFile)
         {
             Exif ans = new Exif();
 
@@ -209,6 +221,30 @@ namespace PhotoLibrary
                         });
                 }
             }
+            ans.HasBeenSet = true;
+
+            return ans;
+        }
+
+        public static Exif GetExifFromImage(Image image)
+        {
+            Exif ans = new Exif();
+
+            Parallel.ForEach(image.PropertyItems, Constants.ParallelOptions,
+                current =>
+                {
+                    var previousPriority = Thread.CurrentThread.Priority;
+                    Thread.CurrentThread.Priority = ThreadPriority.Lowest;
+
+                    if (Constants.ExifData.ContainsKey(current.Id))
+                    {
+                        ans.SetValue(Constants.ExifData[current.Id], current.Value);
+                    }
+
+                    //Reset previous priority of the TPL Thread
+                    Thread.CurrentThread.Priority = previousPriority;
+                });
+
             ans.HasBeenSet = true;
 
             return ans;

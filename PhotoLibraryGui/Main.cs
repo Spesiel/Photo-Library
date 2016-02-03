@@ -158,7 +158,9 @@ namespace PhotoLibrary.Gui
                 prime.ListView.LargeImageList.ImageSize = new Size(128, 128);
 
                 // Create a background worker to show progress
-                FetchForThumbnailsAsync();
+                //FIXME || Disabled background fetching at the moment
+                //FetchForThumbnailsAsync();
+                //FetchForExifAsync();
             }
         }
 

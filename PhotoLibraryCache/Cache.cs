@@ -8,22 +8,36 @@ using System.Threading.Tasks;
 
 namespace PhotoLibrary.Cache
 {
-    public abstract class CacheSingleton<T> : IDisposable
+    public abstract class Cache<T> : IDisposable
     {
-        internal PersistentDictionary<string, T> _Library;
+        internal PersistentDictionary<Guid, T> _Library;
 
-        public virtual ReadOnlyCollection<string> Keys { get { return new ReadOnlyCollection<string>(_Library.Keys.ToList()); } }
-
-        protected CacheSingleton(string pathToCache)
+        public IEnumerable<Tuple<string, T, Guid>> Library
         {
-            _Library = new PersistentDictionary<string, T>(pathToCache);
+            get
+            {
+                return Index.Library.Where(i => _Library.ContainsKey(i.Key)).OrderBy(i => i.Value).Select(a => Tuple.Create(a.Value, _Library[a.Key], a.Key));
+            }
+        }
+
+        public ReadOnlyCollection<string> Keys
+        {
+            get
+            {
+                return new ReadOnlyCollection<string>(Index.Library.Where(i => _Library.ContainsKey(i.Key)).Select(i => i.Value).OrderBy(i => i).ToList());
+            }
+        }
+
+        protected Cache(string pathToCache)
+        {
+            _Library = new PersistentDictionary<Guid, T>(pathToCache);
         }
 
         #region Get/Set
 
         public T Get(string key)
         {
-            return _Library.Where(i => i.Key.StartsWith(key)).Single().Value;
+            return _Library[Index.Library.Where(i => i.Value.Equals(key)).Select(i => i.Key).Single()];
         }
 
         public T Get(string location, int index)
@@ -31,10 +45,10 @@ namespace PhotoLibrary.Cache
             T ans;
             if (location == null)
             {
-                ans = _Library.ElementAt(index).Value;
+                ans = Library.ElementAt(index).Item2;
             }
             else {
-                ans = _Library.Where(i => i.Key.StartsWith(location)).ElementAt(index).Value;
+                ans = Library.Where(i => i.Item1.StartsWith(location)).ElementAt(index).Item2;
             }
 
             return ans;
@@ -42,18 +56,18 @@ namespace PhotoLibrary.Cache
 
         public IEnumerable<T> GetAll(string key)
         {
-            return _Library.Where(i => i.Key.StartsWith(key)).Select(i => i.Value);
+            return Library.Where(i => i.Item1.StartsWith(key)).Select(i => i.Item2);
         }
 
         public void Set(string key, T value)
         {
-            if (_Library.ContainsKey(key))
+            if (Index.Library.ContainsValue(key))
             {
-                _Library[key] = value;
+                _Library[Index.Library.Where(i => i.Value.Equals(key)).Single().Key] = value;
             }
             else
             {
-                _Library.Add(key, value);
+                Add(key, value);
             }
         }
 
@@ -136,27 +150,28 @@ namespace PhotoLibrary.Cache
 
         public virtual void Add(string key, T value)
         {
-            if (_Library.ContainsKey(key))
+            if (Index.Library.ContainsValue(key))
             {
-                _Library[key] = (T)value;
+                _Library[Library.Where(i => i.Item1.Equals(key)).Single().Item3] = value;
             }
             else
             {
-                _Library.Add(key, (T)value);
+                _Library.Add(Index.Add(key), value);
             }
         }
 
-        internal virtual bool Remove(string key)
+        internal bool Remove(string key)
         {
-            return _Library.Remove(Keys.Where(i => i.StartsWith(key, StringComparison.OrdinalIgnoreCase)).Single());
+            return _Library.Remove(Library.Where(i => i.Item1.StartsWith(key, StringComparison.OrdinalIgnoreCase)).Single().Item3);
         }
 
         public void RemoveAll(string key)
         {
-            Parallel.ForEach(_Library.Where(lib => lib.Key.StartsWith(key, StringComparison.OrdinalIgnoreCase)), Constants.ParallelOptions,
+            Parallel.ForEach(Library.Where(i => i.Item1.StartsWith(key, StringComparison.OrdinalIgnoreCase)),
+                Constants.ParallelOptions,
                 current =>
                 {
-                    _Library.Remove(current);
+                    _Library.Remove(current.Item3);
                 });
         }
 
@@ -171,10 +186,10 @@ namespace PhotoLibrary.Cache
             int ans = 0;
             if (location == null)
             {
-                ans = _Library.Count;
+                ans = _Library.Count();
             }
             else {
-                ans = _Library.Count(item => item.Key.StartsWith(location));
+                ans = Keys.Count(i => i.StartsWith(location));
             }
 
             return ans;
@@ -183,6 +198,11 @@ namespace PhotoLibrary.Cache
         public int CountValuesWhere(Func<T, bool> predicate)
         {
             return _Library.Values.Count(predicate);
+        }
+
+        public int CountHits(string key)
+        {
+            return GetAll(key).Count();
         }
 
         #endregion Counting the cache
@@ -200,7 +220,7 @@ namespace PhotoLibrary.Cache
             _Library = null;
 
             PersistentDictionaryFile.DeleteFiles(path);
-            _Library = new PersistentDictionary<string, T>(path);
+            _Library = new PersistentDictionary<Guid, T>(path);
         }
 
         #region IDisposable Support
@@ -222,7 +242,6 @@ namespace PhotoLibrary.Cache
             }
         }
 
-        // This code added to correctly implement the disposable pattern.
         public void Dispose()
         {
             Dispose(true);

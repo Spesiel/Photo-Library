@@ -3,7 +3,7 @@ using PhotoLibrary.Reference;
 
 namespace PhotoLibrary.Cache
 {
-    public class Persons : CacheList<Person>
+    public class Persons : Cache<Person>
     {
         //FIXME Change the path
         public Persons() : base(Constants.CacheFullPath + "Persons")

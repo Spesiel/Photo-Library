@@ -28,7 +28,6 @@ namespace PhotoLibrary
             AtRuntime.Settings = new Settings(initialDirectory);
             Libraries.Clear();
 
-            //
             // Listing the medias
             List<string> medias = GetListMediasInInitialDirectory();
             NerdStats.NumberOfMediasLoaded = medias.Count;

@@ -2,6 +2,7 @@
 
 namespace PhotoLibrary.Cache.Objects
 {
+    [Serializable]
     public struct Timing
     {
         public DateTime Date { get; set; }

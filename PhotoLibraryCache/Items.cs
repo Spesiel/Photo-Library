@@ -3,10 +3,10 @@ using PhotoLibrary.Reference;
 
 namespace PhotoLibrary.Cache
 {
-    public class Items : CacheSingleton<Item>
+    public class Items : Cache<Item>
     {
         //FIXME Change the path
-        public Items() : base(Constants.CacheFullPath)
+        public Items() : base(Constants.CacheFullPath + "Items")
         {
         }
     }

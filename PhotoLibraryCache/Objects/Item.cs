@@ -17,14 +17,14 @@ namespace PhotoLibrary.Cache.Objects
         {
             get
             {
-                if (!string.IsNullOrEmpty(_Thumbnail))
+                if (string.IsNullOrEmpty(_Thumbnail))
                 {
-                    using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(_Thumbnail)))
-                    {
-                        return Image.FromStream(ms);
-                    }
+                    return null;
                 }
-                return null;
+                using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(_Thumbnail)))
+                {
+                    return Image.FromStream(ms);
+                }
             }
             set
             {
