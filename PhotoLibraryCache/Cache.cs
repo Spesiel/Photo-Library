@@ -10,34 +10,26 @@ namespace PhotoLibrary.Cache
 {
     public abstract class Cache<T> : IDisposable
     {
-        internal PersistentDictionary<Guid, T> _Library;
-
-        public IEnumerable<Tuple<string, T, Guid>> Library
-        {
-            get
-            {
-                return Index.Library.Where(i => _Library.ContainsKey(i.Key)).OrderBy(i => i.Value).Select(a => Tuple.Create(a.Value, _Library[a.Key], a.Key));
-            }
-        }
+        internal PersistentDictionary<string, T> _Library;
 
         public ReadOnlyCollection<string> Keys
         {
             get
             {
-                return new ReadOnlyCollection<string>(Index.Library.Where(i => _Library.ContainsKey(i.Key)).Select(i => i.Value).OrderBy(i => i).ToList());
+                return new ReadOnlyCollection<string>(Index.Library.Where(i => _Library.ContainsKey(Index.FromGuid(i.Key, i.Value))).Select(i => i.Value).OrderBy(i => i).ToList());
             }
         }
 
         protected Cache(string pathToCache)
         {
-            _Library = new PersistentDictionary<Guid, T>(pathToCache);
+            _Library = new PersistentDictionary<string, T>(pathToCache);
         }
 
         #region Get/Set
 
         public T Get(string key)
         {
-            return _Library[Index.Library.Where(i => i.Value.Equals(key)).Select(i => i.Key).Single()];
+            return _Library[Index.FromGuid(key)];
         }
 
         public T Get(string location, int index)
@@ -45,10 +37,10 @@ namespace PhotoLibrary.Cache
             T ans;
             if (location == null)
             {
-                ans = Library.ElementAt(index).Item2;
+                ans = _Library[Keys.ElementAt(index)];
             }
             else {
-                ans = Library.Where(i => i.Item1.StartsWith(location)).ElementAt(index).Item2;
+                ans = _Library.Where(i => i.Key.StartsWith(location)).ElementAt(index).Value;
             }
 
             return ans;
@@ -56,14 +48,14 @@ namespace PhotoLibrary.Cache
 
         public IEnumerable<T> GetAll(string key)
         {
-            return Library.Where(i => i.Item1.StartsWith(key)).Select(i => i.Item2);
+            return _Library.Where(i => i.Key.StartsWith(key)).Select(i => i.Value);
         }
 
         public void Set(string key, T value)
         {
             if (Index.Library.ContainsValue(key))
             {
-                _Library[Index.Library.Where(i => i.Value.Equals(key)).Single().Key] = value;
+                _Library[Index.FromGuid(key)] = value;
             }
             else
             {
@@ -152,7 +144,7 @@ namespace PhotoLibrary.Cache
         {
             if (Index.Library.ContainsValue(key))
             {
-                _Library[Library.Where(i => i.Item1.Equals(key)).Single().Item3] = value;
+                _Library[Index.FromGuid(key)] = value;
             }
             else
             {
@@ -162,16 +154,16 @@ namespace PhotoLibrary.Cache
 
         internal bool Remove(string key)
         {
-            return _Library.Remove(Library.Where(i => i.Item1.StartsWith(key, StringComparison.OrdinalIgnoreCase)).Single().Item3);
+            return _Library.Remove(_Library.Where(i => i.Key.StartsWith(key, StringComparison.OrdinalIgnoreCase)).Single());
         }
 
         public void RemoveAll(string key)
         {
-            Parallel.ForEach(Library.Where(i => i.Item1.StartsWith(key, StringComparison.OrdinalIgnoreCase)),
+            Parallel.ForEach(_Library.Where(i => i.Key.StartsWith(key, StringComparison.OrdinalIgnoreCase)),
                 Constants.ParallelOptions,
                 current =>
                 {
-                    _Library.Remove(current.Item3);
+                    _Library.Remove(current);
                 });
         }
 
@@ -220,7 +212,7 @@ namespace PhotoLibrary.Cache
             _Library = null;
 
             PersistentDictionaryFile.DeleteFiles(path);
-            _Library = new PersistentDictionary<Guid, T>(path);
+            _Library = new PersistentDictionary<string, T>(path);
         }
 
         #region IDisposable Support
