@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PhotoLibrary.Reference.Objects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -43,12 +44,22 @@ namespace PhotoLibrary.Cache
 
         public static void Clear()
         {
+            Change.Report(0);
+
             Items.Clear();
+            Change.Report(20);
+
             Persons.Clear();
+            Change.Report(40);
+
             Tags.Clear();
+            Change.Report(60);
+
             Timers.Clear();
+            Change.Report(80);
 
             Index.Clear();
+            Change.Report(100);
         }
     }
 }

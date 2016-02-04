@@ -32,6 +32,7 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStrip_progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStrip_progressText = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStrip_news = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.menuStrip_File = new System.Windows.Forms.ToolStripMenuItem();
             this.openPhotoLibraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,7 +43,7 @@
             this.menuStrip_About_about = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.prime = new PhotoLibrary.Screens.Prime();
-            this.toolStrip_news = new System.Windows.Forms.ToolStripStatusLabel();
+            this.wait = new PhotoLibrary.Screens.Wait();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -66,6 +67,11 @@
             this.toolStrip_progressText.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStrip_progressText.Name = "toolStrip_progressText";
             resources.ApplyResources(this.toolStrip_progressText, "toolStrip_progressText");
+            // 
+            // toolStrip_news
+            // 
+            this.toolStrip_news.Name = "toolStrip_news";
+            resources.ApplyResources(this.toolStrip_news, "toolStrip_news");
             // 
             // menuStrip
             // 
@@ -131,15 +137,17 @@
             resources.ApplyResources(this.prime, "prime");
             this.prime.Name = "prime";
             // 
-            // toolStrip_news
+            // wait
             // 
-            this.toolStrip_news.Name = "toolStrip_news";
-            resources.ApplyResources(this.toolStrip_news, "toolStrip_news");
+            this.wait.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+            resources.ApplyResources(this.wait, "wait");
+            this.wait.Name = "wait";
             // 
             // Main
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.wait);
             this.Controls.Add(this.prime);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
@@ -171,6 +179,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuStrip_About_about;
         private Screens.Prime prime;
         private System.Windows.Forms.ToolStripStatusLabel toolStrip_news;
+        private Screens.Wait wait;
     }
 }
 

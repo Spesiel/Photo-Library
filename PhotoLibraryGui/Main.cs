@@ -1,5 +1,6 @@
 ﻿using PhotoLibrary.Reference;
 using PhotoLibrary.Reference.Globalization;
+using PhotoLibrary.Reference.Objects;
 using PhotoLibrary.Screens;
 using System;
 using System.ComponentModel;
@@ -55,6 +56,8 @@ namespace PhotoLibrary.Gui
                     };
                     bw.RunWorkerAsync();
                 };
+                // Render the layout visible
+                prime.Visible = true;
             }
             else
             {
@@ -72,6 +75,8 @@ namespace PhotoLibrary.Gui
         {
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
+                prime.Visible = false;
+                wait.Visible = true;
                 // For the stats
                 DateTime start;
 
@@ -118,6 +123,7 @@ namespace PhotoLibrary.Gui
                 }
 
                 LoadingOccured = true;
+                prime.Visible = true;
             }
         }
 
