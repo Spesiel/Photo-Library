@@ -30,10 +30,11 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Preview));
             this.table = new System.Windows.Forms.TableLayoutPanel();
+            this.label = new System.Windows.Forms.Label();
             this.picture = new System.Windows.Forms.PictureBox();
             this.pic_previous = new System.Windows.Forms.PictureBox();
             this.pic_next = new System.Windows.Forms.PictureBox();
-            this.label = new System.Windows.Forms.Label();
+            this.information = new PhotoLibrary.Screens.Controls.Information();
             this.table.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pic_previous)).BeginInit();
@@ -44,10 +45,17 @@
             // 
             resources.ApplyResources(this.table, "table");
             this.table.Controls.Add(this.picture, 0, 0);
-            this.table.Controls.Add(this.pic_previous, 1, 2);
-            this.table.Controls.Add(this.pic_next, 4, 2);
+            this.table.Controls.Add(this.pic_previous, 1, 3);
+            this.table.Controls.Add(this.pic_next, 4, 3);
             this.table.Controls.Add(this.label, 0, 1);
+            this.table.Controls.Add(this.information, 0, 2);
             this.table.Name = "table";
+            // 
+            // label
+            // 
+            resources.ApplyResources(this.label, "label");
+            this.table.SetColumnSpan(this.label, 6);
+            this.label.Name = "label";
             // 
             // picture
             // 
@@ -72,11 +80,11 @@
             this.pic_next.TabStop = false;
             this.pic_next.Click += new System.EventHandler(this.pic_next_Click);
             // 
-            // label
+            // information
             // 
-            resources.ApplyResources(this.label, "label");
-            this.table.SetColumnSpan(this.label, 6);
-            this.label.Name = "label";
+            this.table.SetColumnSpan(this.information, 6);
+            resources.ApplyResources(this.information, "information");
+            this.information.Name = "information";
             // 
             // Preview
             // 
@@ -100,5 +108,6 @@
         private System.Windows.Forms.PictureBox pic_previous;
         private System.Windows.Forms.PictureBox pic_next;
         private System.Windows.Forms.Label label;
+        private Controls.Information information;
     }
 }

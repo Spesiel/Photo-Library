@@ -133,7 +133,7 @@
     <value>3, 3</value>
   </data>
   <data name="picture.Size" type="System.Drawing.Size, System.Drawing">
-    <value>778, 501</value>
+    <value>778, 437</value>
   </data>
   <data name="picture.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
     <value>Zoom</value>
@@ -155,6 +155,9 @@
   </data>
   <data name="pic_previous.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
+  </data>
+  <data name="pic_previous.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="pic_previous.Location" type="System.Drawing.Point, System.Drawing">
     <value>328, 529</value>
@@ -179,6 +182,9 @@
   </data>
   <data name="&gt;&gt;pic_previous.ZOrder" xml:space="preserve">
     <value>1</value>
+  </data>
+  <data name="pic_next.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="pic_next.Location" type="System.Drawing.Point, System.Drawing">
     <value>424, 529</value>
@@ -213,8 +219,11 @@
   <data name="label.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 13pt</value>
   </data>
+  <data name="label.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="label.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 507</value>
+    <value>0, 443</value>
   </data>
   <data name="label.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
@@ -243,6 +252,36 @@
   <data name="&gt;&gt;label.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
+  <data name="information.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="information.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 465</value>
+  </data>
+  <data name="information.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="information.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>500, 64</value>
+  </data>
+  <data name="information.Size" type="System.Drawing.Size, System.Drawing">
+    <value>784, 64</value>
+  </data>
+  <data name="information.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;information.Name" xml:space="preserve">
+    <value>information</value>
+  </data>
+  <data name="&gt;&gt;information.Type" xml:space="preserve">
+    <value>PhotoLibrary.Screens.Controls.Information, PhotoLibraryScreens, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;information.Parent" xml:space="preserve">
+    <value>table</value>
+  </data>
+  <data name="&gt;&gt;information.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
   <data name="table.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
@@ -250,7 +289,7 @@
     <value>0, 0</value>
   </data>
   <data name="table.RowCount" type="System.Int32, mscorlib">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="table.Size" type="System.Drawing.Size, System.Drawing">
     <value>784, 561</value>
@@ -271,7 +310,7 @@
     <value>0</value>
   </data>
   <data name="table.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="picture" Row="0" RowSpan="1" Column="0" ColumnSpan="6" /&gt;&lt;Control Name="pic_previous" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="pic_next" Row="2" RowSpan="1" Column="4" ColumnSpan="1" /&gt;&lt;Control Name="label" Row="1" RowSpan="1" Column="0" ColumnSpan="6" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,50,Absolute,32,Absolute,32,Absolute,32,Absolute,32,Percent,50" /&gt;&lt;Rows Styles="Percent,100,AutoSize,0,Absolute,32" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="picture" Row="0" RowSpan="1" Column="0" ColumnSpan="6" /&gt;&lt;Control Name="pic_previous" Row="3" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="pic_next" Row="3" RowSpan="1" Column="4" ColumnSpan="1" /&gt;&lt;Control Name="label" Row="1" RowSpan="1" Column="0" ColumnSpan="6" /&gt;&lt;Control Name="information" Row="2" RowSpan="1" Column="0" ColumnSpan="6" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,50,Absolute,32,Absolute,32,Absolute,32,Absolute,32,Percent,50" /&gt;&lt;Rows Styles="Percent,100,AutoSize,0,AutoSize,0,Absolute,32" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

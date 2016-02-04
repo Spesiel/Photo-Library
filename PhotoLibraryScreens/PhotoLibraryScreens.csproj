@@ -62,6 +62,12 @@
     <Compile Include="Controls\CollapsibleFilters.Designer.cs">
       <DependentUpon>CollapsibleFilters.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Information.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Information.Designer.cs">
+      <DependentUpon>Information.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Sidebar.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -112,6 +118,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\CollapsibleFilters.resx">
       <DependentUpon>CollapsibleFilters.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Information.resx">
+      <DependentUpon>Information.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\Sidebar.resx">
       <DependentUpon>Sidebar.cs</DependentUpon>
